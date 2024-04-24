@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<title>Daftar Favorit Pengguna</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+</style>
+
+<div class="container">
+  <h2>Daftar Favorit Pengguna</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Judul</th>
+        <th scope="col">Waktu Ditambahkan</th>
+        <th scope="col">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Film 1</td>
+        <td>2024-04-24 10:00:00</td>
+        <td>
+          <button type="button" class="btn btn-danger btn-sm">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Film 2</td>
+        <td>2024-04-23 14:30:00</td>
+        <td>
+          <button type="button" class="btn btn-danger btn-sm">Delete</button>
+        </td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock content %}
