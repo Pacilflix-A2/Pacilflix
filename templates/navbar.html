@@ -9,40 +9,46 @@
   <!-- Custom CSS -->
   <style>
     /* Add custom styles here */
+    .navbar {
+      background-color: #f7cdb1; /* Semi-transparent black background */
+      backdrop-filter: blur(100px); /* Apply a blur effect */
+    }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Pacilflix</a>
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <img src="{% static 'images/logo.png' %}" style="width: 60px; height: auto;">
+  <img src="{% static 'images/nama.png' %}" style="width: 70px; height: auto;">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
       <!-- For Guest (Belum Login) -->
-      <li class="nav-item">
-        <a class="nav-link" href="#">Trailer Tayangan</a>
-      </li>
-      <!-- For Logged In Users -->
-      <li class="nav-item">
-        <a class="nav-link" href="#">Daftar Tayangan</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Daftar Kontributor</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Kelola Daftar Favorit</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Kelola Daftar Unduhan</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Kelola Langganan</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Logout</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Trailer Tayangan</a>
+        </li>
+        <!-- For Logged In Users -->
+        <li class="nav-item">
+            <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Daftar Tayangan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Daftar Kontributor</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Kelola Daftar Favorit</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Kelola Daftar Unduhan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color: #EA7F4D; font-weight: bold; font-size: 14px;" href="#">Kelola Langganan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color: #B2341C; font-weight: bold; font-size: 14px;" href="#">Logout</a>
+        </li>
+        
     </ul>
   </div>
 </nav>
