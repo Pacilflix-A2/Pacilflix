@@ -17,11 +17,10 @@
     {% block navbar %}
     {% include 'navbar.html' %}
     {% endblock %}
-    <div class="container">
+    <div class="container" style="margin-top: 100px;"> <!-- Increased margin-top -->
         {% block content %}
         {% endblock %}
     </div>
-    
     {% block extra_js %}
     {% endblock %}
 </body>
