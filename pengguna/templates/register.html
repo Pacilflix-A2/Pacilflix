@@ -1,58 +1,78 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Register
+  Register
 {% endblock title %}
 
 {% block content %}  
 <style>
-    .register-container {
-      display: grid;
-      place-items: center;
-      height: 80vh;
-      color:white;
-    }
+  .register-container {
+    display: grid;
+    place-items: center;
+    height: 80vh;
+    color:white;
+  }
 
-    .register-form {
-      max-width: 725px;
-      width: 100%;
-      padding: 40px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      background-color: #f1ab80;
-    }
+  .register-form {
+    max-width: 725px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 20px;
+    background-color: #f1ab80;
+  }
 
-    .register-title {
-      text-align: center;
-    }
+  .register-title {
+    text-align: center;
+  }
 
-    .form-control {
-      width: 100%;
-    }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    width: 100%;
+  }
 
-    .submit-btn {
-      width: 100%;
-      background-color: #f5c16c;
-      border: 1px solid #f5c16c;
-      color: white;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top:20px;
-    }
+  .button-container .button-half {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
 
-    .submit-btn:hover {
-      background-color: #d66036;
-      border-color: #d66036;
-    }
+  .custom-btn {
+    width: 100%;
+    max-width: 150px;
+    background-color: #ea7f4d;
+    border: 1px solid #ea7f4d;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .custom-btn:hover {
+    background-color: #d66036;
+    border-color: #d66036;
+    color: white;
+    text-decoration: none;
+  }
+
+  .login-btn {
+    background-color: #f5c16c;
+    border-color: #f5c16c;
+  }
+
+  /* Add styling for the form inputs */
+  .form-control {
+    width: 100%;
+    margin-bottom: 20px; /* Add space between form fields */
+  }
 </style>
 
 <div class="register-container">
   <div class="register-form">
     <h2 class="register-title">REGISTER</h2>
-
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
@@ -63,7 +83,18 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password">
       </div>
-      <button type="submit" class="submit-btn">Register</button>
+      <div class="form-group">
+        <label for="negara">Negara Asal</label>
+        <input type="text" class="form-control" id="negara">
+      </div>
+      <div class="button-container">
+        <div class="button-half">
+          <a href="{% url 'pengguna:login' %}" class="custom-btn login-btn">Login</a>
+        </div>
+        <div class="button-half">
+          <button type="submit" class="custom-btn">Register</button>
+        </div>
+      </div>
     </form>
   </div>
 </div>
