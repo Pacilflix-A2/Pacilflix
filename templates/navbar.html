@@ -71,7 +71,7 @@
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Kelola Langganan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Logout</a>
+          <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:logout' %}">Logout</a>
         </li>
       {% else %}
         <!-- For Guest (Belum Login) -->

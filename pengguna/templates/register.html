@@ -73,19 +73,28 @@
 <div class="register-container">
   <div class="register-form">
     <h2 class="register-title">REGISTER</h2>
-    <form method="POST">
+    {% if form.errors %}
+      <ul>
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}
+          <li style="color: #b2341c;">{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <form method="POST" action="{% url 'pengguna:register' %}">
       {% csrf_token %}
       <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username">
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password">
+        <label for="{{ form.password1.id_for_label }}">Password</label>
+        {{ form.password1 }}
       </div>
       <div class="form-group">
-        <label for="negara">Negara Asal</label>
-        <input type="text" class="form-control" id="negara">
+        <label for="{{ form.negara.id_for_label }}">Negara Asal</label>
+        {{ form.negara }}
       </div>
       <div class="button-container">
         <div class="button-half">
