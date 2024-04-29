@@ -1,29 +1,66 @@
-{% extends 'base.html' %} {% block content %}
-<div class="container mx-auto">
-  <p>HALOOOOOOOOO</p>
-  <h1 class="text-2xl font-bold mb-4">Trailer</h1>
-  <!-- Add your Trailer page content here -->
-  <div class="mb-4">
-    <input
-      type="text"
-      placeholder="Search by title"
-      class="border border-gray-300 rounded px-4 py-2"
-    />
-    <button class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
-  </div>
-  <!-- Display the list of trailers -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <!-- Trailer item template -->
-    <div class="bg-white shadow rounded p-4">
-      <img
-        src="trailer-image.jpg"
-        alt="Trailer Image"
-        class="w-full h-40 object-cover mb-2"
+{% extends 'base-temp.html' %} {% block content %}
+<div class="w-screen" style="margin: -24px 0 0">
+  <h1
+    class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
+  >
+    Daftar Tayangan
+  </h1>
+  <div class="container">
+    <div class="my-2">
+      <label class="block text-black text-base font-bold ml-2" for="username">
+        Search Judul
+      </label>
+      <input
+        class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="movie-title"
+        type="text"
+        placeholder="Enter movie title"
       />
-      <h2 class="text-lg font-bold">Trailer Title</h2>
-      <p class="text-gray-600">Trailer description goes here...</p>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
     </div>
-    <!-- Repeat the trailer item template for each trailer -->
+    <h1 class="text-2xl text-center font-bold">Top 10 Tayangan Minggu Ini</h1>
+    <div class="flex flex-row justify-center mt-2">
+      <h2
+        class="bg-[#DF480E] border-2 border-black py-1 px-5 text-white border-r-0"
+      >
+        Top 10 Global
+      </h2>
+      <h2 class="bg-[#DF480E] border-2 border-black py-1 px-5 text-white">
+        Top 10 Local
+      </h2>
+    </div>
+    <!-- Display the list of trailers -->
+    <div class="grid grid-cols-1 gap-4 mt-4">
+      <!-- Trailer item template -->
+      <div class="bg-[#D9D9D9] shadow rounded p-4">
+        <img
+          src="trailer-image.jpg"
+          alt="Trailer Image"
+          class="w-full h-40 object-cover mb-2"
+        />
+        <h2 class="text-lg font-bold">Trailer Title</h2>
+        <p class="text-gray-600">Trailer description goes here...</p>
+      </div>
+      <div class="bg-[#D9D9D9] shadow rounded p-4">
+        <img
+          src="trailer-image.jpg"
+          alt="Trailer Image"
+          class="w-full h-40 object-cover mb-2"
+        />
+        <h2 class="text-lg font-bold">Trailer Title</h2>
+        <p class="text-gray-600">Trailer description goes here...</p>
+      </div>
+      <div class="bg-[#D9D9D9] shadow rounded p-4">
+        <img
+          src="trailer-image.jpg"
+          alt="Trailer Image"
+          class="w-full h-40 object-cover mb-2"
+        />
+        <h2 class="text-lg font-bold">Trailer Title</h2>
+        <p class="text-gray-600">Trailer description goes here...</p>
+      </div>
+      <!-- Repeat the trailer item template for each trailer -->
+    </div>
   </div>
 </div>
 {% endblock content %}
