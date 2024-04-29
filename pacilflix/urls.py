@@ -23,7 +23,7 @@ from pacilflix import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('daftar.urls').),
+    path('', include('daftar.urls')),
     path('kontributor/', include('kontributor.urls')),
     path('langganan/', include('langganan.urls')),
     path('', include('pengguna.urls')),
