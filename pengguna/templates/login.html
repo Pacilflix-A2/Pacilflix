@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block content %}
+<style>
+  .login-container {
+    display: grid;
+    place-items: center;
+    height: 80vh;
+    color:white;
+  }
+
+  .login-form {
+    max-width: 725px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 20px;
+    background-color: #f1ab80;
+  }
+
+  .login-title {
+    text-align: center;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    width: 100%;
+  }
+
+  .button-container .button-half {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .custom-btn {
+    width: 100%;
+    max-width: 150px;
+    background-color: #ea7f4d;
+    border: 1px solid #ea7f4d;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .custom-btn:hover {
+    background-color: #d66036;
+    border-color: #d66036;
+    color: white;
+    text-decoration: none;
+  }
+
+  .register-btn {
+    background-color: #f5c16c;
+    border-color: #f5c16c;
+  }
+</style>
+<div class="login-container">
+  <div class="login-form">
+    <h2 class="login-title">LOGIN</h2>
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li style="color: #b2341c;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %} 
+    <form method="POST" action="{% url 'pengguna:login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username"> 
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password">
+      </div>
+      <div class="button-container">
+        <div class="button-half">
+          <a href="{% url 'pengguna:register' %}" class="custom-btn register-btn">Register</a>
+        </div>
+        <div class="button-half">
+          <button type="submit" class="custom-btn">Login</button>
+        </div>
+      </div>
+    </form> 
+  </div>
+</div>
+{% endblock %}
