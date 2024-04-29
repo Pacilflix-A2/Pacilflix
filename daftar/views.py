@@ -54,6 +54,6 @@ def daftar_unduhan(request):
     daftar_favorit = zip(list_judul, list_time)
     
     context = {
-        'daftar_favorit': daftar_favorit,
+        'daftar_unduhan': daftar_favorit,
     }
     return render(request, "daftar_unduhan.html", context)

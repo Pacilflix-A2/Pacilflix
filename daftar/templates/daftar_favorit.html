@@ -52,6 +52,33 @@
         background-color: #E76838; /* Button hover background color */
         border-color: #E76838; /* Button hover border color */
     }
+
+    /* Custom CSS for select dropdown */
+    .custom-dropdown select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="%2373261B" d="M8 11l4-5H4l4 5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      background-color: #FBE7D9;
+      color: #73261B;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 28px 6px 10px;
+      cursor: pointer;
+    }
+
+    .custom-dropdown select:hover {
+      background-color: #FBE7D9;
+    }
+
+    .custom-dropdown select:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
 </style>
 
 <div class="container">
@@ -70,11 +97,53 @@
           <td>{{ judul }}</td>
           <td>{{ waktu }}</td>
           <td>
-            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            <!-- Use the add button to trigger the modal -->
+            <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-toggle="modal" data-target="#addToFavoriteModal" data-title="{{ judul }}">Delete</button>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<!-- Modal for adding to favorite list -->
+<div class="modal fade" id="addToFavoriteModal" tabindex="-1" aria-labelledby="addToFavoriteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #E76838; color: #FFF;">
+        <h5 class="modal-title" id="addToFavoriteModalLabel">Tambah ke Daftar Favorit</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background-color: #FDF5EF; color: #73261B;">
+        <form id="addToFavoriteForm">
+          <div class="mb-3">
+            <label for="favoriteTitle" class="form-label">Pilih Daftar Favorit:</label>
+            <div class="custom-dropdown">
+              <select class="form-select" id="favoriteTitle" name="favoriteTitle">
+                <!-- Options for dropdown (You may populate these dynamically) -->
+                <option value="1">Daftar Favorit 1</option>
+                <option value="2">Daftar Favorit 2</option>
+                <option value="3">Daftar Favorit 3</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="background-color: #EA7F4D; border-color: #EA7F4D;">Tambah</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // JavaScript to handle favorite button click and populate modal with correct title
+  document.querySelectorAll('.btn-danger').forEach(item => {
+    item.addEventListener('click', event => {
+      const title = event.target.getAttribute('data-title');
+      document.getElementById('modalTitle').innerText = title; // Set the modal title
+      document.getElementById('favoriteTitle').value = title; // Populate the dropdown with the selected title
+    });
+  });
+</script>
+
 {% endblock content %}
