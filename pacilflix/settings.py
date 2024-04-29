@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'daftar',
     'pengguna',
     'main',
+    'kontributor',
+    'langganan',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
