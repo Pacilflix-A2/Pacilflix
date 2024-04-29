@@ -23,10 +23,9 @@ from pacilflix import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('daftar/', include('daftar.urls')),
+    path('', include('daftar.urls').),
     path('kontributor/', include('kontributor.urls')),
     path('langganan/', include('langganan.urls')),
     path('', include('pengguna.urls')),
     path('', include('main.urls')),
-    
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
