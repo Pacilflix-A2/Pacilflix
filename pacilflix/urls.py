@@ -26,4 +26,5 @@ urlpatterns = [
     path('daftar/', include('daftar.urls')),
     path('', include('pengguna.urls')),
     path('', include('main.urls')),
+    path('', include('trailer.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

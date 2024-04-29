@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto">
+  <p>HALOOOOOOOOO</p>
+  <h1 class="text-2xl font-bold mb-4">Trailer</h1>
+  <!-- Add your Trailer page content here -->
+  <div class="mb-4">
+    <input
+      type="text"
+      placeholder="Search by title"
+      class="border border-gray-300 rounded px-4 py-2"
+    />
+    <button class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+  </div>
+  <!-- Display the list of trailers -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Trailer item template -->
+    <div class="bg-white shadow rounded p-4">
+      <img
+        src="trailer-image.jpg"
+        alt="Trailer Image"
+        class="w-full h-40 object-cover mb-2"
+      />
+      <h2 class="text-lg font-bold">Trailer Title</h2>
+      <p class="text-gray-600">Trailer description goes here...</p>
+    </div>
+    <!-- Repeat the trailer item template for each trailer -->
+  </div>
+</div>
+{% endblock content %}
