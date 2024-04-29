@@ -65,100 +65,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Film 1</td>
-        <td>2024-02-24 10:00:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr><var></var>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 3</td>
-        <td>2024-03-20 00:00:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
+      {% for judul, waktu in daftar_favorit %}
+        <tr>
+          <td>{{ judul }}</td>
+          <td>{{ waktu }}</td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+          </td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>

@@ -37,6 +37,11 @@
   .nav-item {
     background-color: #f8f9fa; /* Change to desired color */
   }
+  p{
+    color: #EA7F4D; /* Title color */
+    font-size: 20px;
+    font-weight: bold;
+  }
 </style>
 
 <body>
@@ -46,11 +51,12 @@
       <img src="{% static 'images/logo.png' %}" alt="Logo">
       <img src="{% static 'images/nama.png' %}" alt="Nama">
     </a>
+    <p>Username</p>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
+    
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <!-- For Guest (Belum Login) -->
