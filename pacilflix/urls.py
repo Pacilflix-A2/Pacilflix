@@ -29,4 +29,5 @@ urlpatterns = [
     path('', include('pengguna.urls')),
     path('', include('main.urls')),
     path('', include('trailer.urls')),
+    path('tayangan/', include('tayangan.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
