@@ -7,7 +7,7 @@
   </h1>
   <div class="container">
     <div class="my-2">
-      <label class="block text-black text-base font-bold ml-2" for="username">
+      <label class="block text-black font-bold ml-2" for="username">
         Search Judul
       </label>
       <input
@@ -22,19 +22,25 @@
         Search
       </button>
     </div>
-    <h1 class="text-2xl text-center font-bold">Top 10 Tayangan Minggu Ini</h1>
+    <h1 class="text-2xl text-center font-lexend">Top 10 Tayangan Minggu Ini</h1>
     <div class="flex flex-row justify-center mt-2">
-      <h2
-        class="bg-[#DF480E] border-2 border-black py-1 px-5 text-white border-r-0"
+      <a href="" style="text-decoration: none">
+        <h2
+          class="bg-[#DF480E] hover:bg-[#F4BA7E] active:bg-[#DF8931] text-white border-2 border-black py-1 px-5 border-r-0"
+        >
+          Top 10 Global
+        </h2></a
       >
-        Top 10 Global
-      </h2>
-      <h2 class="bg-[#DF480E] border-2 border-black py-1 px-5 text-white">
-        Top 10 Local
-      </h2>
+      <a href="" style="text-decoration: none">
+        <h2
+          class="bg-[#DF480E] hover:bg-[#F4BA7E] active:bg-[#DF8931] text-white border-2 border-black py-1 px-5"
+        >
+          Top 10 Local
+        </h2></a
+      >
     </div>
     <!-- Display the list of trailers -->
-    <div class="grid grid-cols-1 gap-4 mt-4">
+    <div class="container px-5 m grid grid-cols-1 gap-4 mt-4">
       <!-- Trailer item template -->
       <div class="bg-[#D9D9D9] shadow rounded p-4">
         <img
@@ -63,8 +69,7 @@
         <h2 class="text-lg font-bold">Trailer Title</h2>
         <p class="text-gray-600">Trailer description goes here...</p>
       </div>
-      <!-- Repeat the trailer item template for each trailer -->
     </div>
   </div>
+  {% endblock content %}
 </div>
-{% endblock content %}

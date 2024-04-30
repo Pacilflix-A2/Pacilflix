@@ -3,65 +3,318 @@
   <h1
     class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
   >
-    Daftar Tayangan
+    Halaman Film
   </h1>
   <div class="container">
-    <div class="my-2">
-      <label class="block text-black font-bold ml-2" for="username">
-        Search Judul
-      </label>
-      <input
-        class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="movie-title"
-        type="text"
-        placeholder="Enter movie title"
-      />
+    <!-- Title & Genre -->
+    <div class="my-5 ml-5">
+      <h1 class="text-5xl underline">Gran Turismo</h1>
+      <h2 class="text-xl">Action, Drama, Sci-fi</h2>
+    </div>
+    <!-- Buttons -->
+    <div class="containe flex flex-row mt-3">
       <button
-        class="bg-[#DF8931] text-white px-4 py-2 rounded hover:bg-[#F4BA7E] active:bg-[#DF8931]"
+        class="bg-[#DF8931] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#F4BA7E] active:bg-[#DF8931]"
       >
-        Search
+        Tonton Sekarang</button
+      ><button
+        class="bg-[#FFD874] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#FFEDBF] active:bg-[#FFD874]"
+      >
+        Unduh Tayangan</button
+      ><button
+        class="bg-[#ABFF84] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#D7FFC4] active:bg-[#ABFF84]"
+      >
+        Tambah ke Favorit
       </button>
     </div>
-
-    <!-- Display the list of films -->
-    <div class="mt-10 container h-full px-5 m">
-      <div class="w-full">
-        <h1 class="text-2xl font-bold text-center mt-2">Hasil Pencarian</h1>
-        <div class="mx-auto mt-3">
-          <table class="w-full text-left table-auto">
-            <thead>
-              <tr class="bg-[#EFB177] text-black">
-                <th class="py-2 px-4">Judul Film</th>
-                <th class="py-2 px-4">Sinopsis</th>
-                <th class="py-2 px-4">URL Trailer</th>
-                <th class="py-2 px-4">Tanggal Rilis</th>
-                <th class="py-2 px-4"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for hasil in search_results %}
-              <tr class="{% cycle 'bg-white' 'bg-gray-100' %}">
-                <td class="py-2 px-4">{{ hasil.judul }}</td>
-                <td class="py-2 px-4">{{ hasil.sinopsis }}</td>
-                <td class="py-2 px-4">
-                  <a
-                    href="{{ hasil.url }}"
-                    class="text-blue-500 hover:underline"
-                    >{{ hasil.url }}</a
-                  >
-                </td>
-                <td class="py-2 px-4">{{ hasil.tanggal_rilis }}</td>
-                <td class="py-2 px-4">
-                  <button
-                    class="bg-[#DF8931] text-white px-4 py-2 rounded hover:bg-[#F4BA7E] active:bg-[#DF8931]"
-                  >
-                    Tonton
-                  </button>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <!-- Description & Poster -->
+    <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
+      <div class="">
+        <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
+          Deskripsi Tayangan:
+        </h1>
+        <p class="text-black text-lg ml-3 py-5">
+          Total View: 12345 <br />
+          Rating Rata-Rata: 9/10 <br />
+          Sinopsis: Lorem ipsum <br />
+          Durasi Film: 2 Jam <br />
+          Tanggal Rilis Film: 10/10/2020 <br />
+          URL Film: https://..... <br />
+          Asal Negara: Uzbekistan <br />
+          Pemain: Andi, Budi& <br />
+          Penulis Skenario: Jamal, Agung<br />
+          Sutradara: Mikail
+        </p>
+      </div>
+      <div class="h-96 w-48 bg-gray-700 ml-auto self-center mr-10 flex">
+        <p class="self-center mx-auto">Poster</p>
+      </div>
+    </div>
+    <!-- Ulasan -->
+    <div class="bg-[#D9D9D9] pt-3">
+      <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
+        Ulasan
+      </h1>
+      <div class="w-1/2 mx-auto flex flex-col items-center" id="review-input">
+        <label class="block text-black ml-2 self-start" for="username">
+          Berikan Ulasan
+        </label>
+        <input
+          class="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="ulasan-film"
+          type="text"
+          placeholder="Tulis ulasan..."
+        />
+        <!-- Stars -->
+        <div class="mt-3">
+          <button class="" data-rating="1">
+            <svg
+              class="w-6 h-6 text-slate-500 hover:text-yellow-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+          </button>
+          <button class="" data-rating="1">
+            <svg
+              class="w-6 h-6 text-slate-500 hover:text-yellow-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+          </button>
+          <button class="" data-rating="1">
+            <svg
+              class="w-6 h-6 text-slate-500 hover:text-yellow-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+          </button>
+          <button class="" data-rating="1">
+            <svg
+              class="w-6 h-6 text-slate-500 hover:text-yellow-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+          </button>
+          <button class="" data-rating="1">
+            <svg
+              class="w-6 h-6 text-slate-500 hover:text-yellow-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+          </button>
+        </div>
+        <!-- Submit Button -->
+        <button
+          class="shadow bg-[#DF8931] text-white px-4 pt-1 rounded hover:bg-[#F4BA7E] active:bg-[#DF8931]"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+    <!-- Review List -->
+    <div class="bg-[#D9D9D9] pt-3">
+      <h2 class="ml-5 mb-2">Daftar Ulasan:</h2>
+      <!-- Reviews -->
+      <div class="gap-5 flex flex-col">
+        <div class="bg-[#EDEDED] mx-10">
+          <div class="flex flex-row">
+            <h3 class="mt-2 ml-5 font-bold">John Doe</h3>
+            <div class="ml-auto mt-2 mr-5 flex flex-row">
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+            </div>
+          </div>
+          <p class="mt-2 mx-5 text-black text-base font-normal">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
+            ultricies ac lectus ac pulvinar. Integer bibendum sed urna at
+            iaculis. Proin leo est, iaculis vel purus nec, ultrices convallis
+            enim. Donec libero diam, pretium eu tincidunt sit amet, dictum et
+            ligula. Aliquam mattis viverra nulla ac rhoncus. Cras quis dictum
+            ante, eget congue metus.
+          </p>
+        </div>
+        <div class="bg-[#EDEDED] mx-10">
+          <div class="flex flex-row">
+            <h3 class="mt-2 ml-5 font-bold">Jane Smith</h3>
+            <div class="ml-auto mt-2 mr-5 flex flex-row">
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-[#7E7E7E]"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+            </div>
+          </div>
+          <p class="mt-2 mx-5 text-black text-base font-normal">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
+            ultricies ac lectus ac pulvinar. Integer bibendum sed urna at
+            iaculis. Proin leo est, iaculis vel purus nec, ultrices convallis
+            enim. Donec libero diam, pretium eu tincidunt sit amet, dictum et
+            ligula. Aliquam mattis viverra nulla ac rhoncus. Cras quis dictum
+            ante, eget congue metus.
+          </p>
+        </div>
+        <div class="bg-[#EDEDED] mx-10">
+          <div class="flex flex-row">
+            <h3 class="mt-2 ml-5 font-bold">Black Jack</h3>
+            <div class="ml-auto mt-2 mr-5 flex flex-row">
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-yellow-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-[#7E7E7E]"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <svg
+                class="w-6 h-6 text-[#7E7E7E]"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+            </div>
+          </div>
+          <p class="mt-2 mx-5 text-black text-base font-normal">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
+            ultricies ac lectus ac pulvinar. Integer bibendum sed urna at
+            iaculis. Proin leo est, iaculis vel purus nec, ultrices convallis
+            enim. Donec libero diam, pretium eu tincidunt sit amet, dictum et
+            ligula. Aliquam mattis viverra nulla ac rhoncus. Cras quis dictum
+            ante, eget congue metus.
+          </p>
         </div>
       </div>
     </div>

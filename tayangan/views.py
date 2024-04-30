@@ -40,3 +40,39 @@ def detail_tayangan_film(request):
     }
 
     return render(request, 'tayangan/halaman_film.html', {'film_data': film_data})
+
+def detail_tayangan_series(request):
+    series_data = {
+        'judul': 'Gran Turismo',
+        'genre': ['Action', 'Drama', 'Sci-fi'],
+        'total_view': 12345,
+        'rating_rata_rata': 9,
+        'sinopsis': 'Lorem ipsum',
+        'durasi_film': '2 Jam',
+        'tanggal_rilis': '2020-10-10',
+        'url_film': 'https://example.com/tayangan1',
+        'asal_negara': 'Uzbekistan',
+        'pemain': ['Andi', 'Budi'],
+        'penulis_skenario': ['Jamal', 'Agung'],
+        'sutradara': 'Mikail',
+    }
+
+    return render(request, 'tayangan/halaman_series.html', {'series_data': series_data})
+
+def detail_tayangan_episode(request):
+    episode_data = {
+        'judul': 'Gran Turismo',
+        'genre': ['Action', 'Drama', 'Sci-fi'],
+        'total_view': 12345,
+        'rating_rata_rata': 9,
+        'sinopsis': 'Lorem ipsum',
+        'durasi_film': '2 Jam',
+        'tanggal_rilis': '2020-10-10',
+        'url_film': 'https://example.com/tayangan1',
+        'asal_negara': 'Uzbekistan',
+        'pemain': ['Andi', 'Budi'],
+        'penulis_skenario': ['Jamal', 'Agung'],
+        'sutradara': 'Mikail',
+    }
+
+    return render(request, 'tayangan/halaman_episode.html', {'episode_data': episode_data})
