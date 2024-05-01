@@ -12,6 +12,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'tayangan/fonts/lexend/lexend.css' %}"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
     {% block extra_css %} {% endblock %}
   </head>
   <body>
@@ -19,7 +25,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {% block navbar %} {% include 'navbar.html' %} {% endblock %}
-    <div class="container" style="margin-top: 80px">
+    <div style="margin-top: 80px">
       <!-- Increased margin-top -->
       {% block content %} {% endblock %}
     </div>

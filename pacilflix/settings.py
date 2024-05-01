@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'tayangan',
+    'trailer',
     'daftar',
     'pengguna',
     'main',

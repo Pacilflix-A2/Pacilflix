@@ -1,0 +1,61 @@
+{% extends 'base-temp.html' %} {% block content %}
+<div class="w-screen" style="margin: -24px 0 0">
+  <h1
+    class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
+  >
+    Halaman Film
+  </h1>
+  <div class="container">
+    <!-- Title & Genre -->
+    <div class="mt-5 ml-5">
+      <h1 class="text-5xl underline">Solo Leveling</h1>
+      <h2 class="text-xl">Episode 1: Introduction</h2>
+    </div>
+    <!-- Episodes -->
+    <div class="ml-5 mt-2 w-fit">
+      <h1 class="text-xl font-bold underline">Episode lainnya:</h1>
+      <ul class="list-disc ml-8">
+        <a href="">
+          <li class="">
+            <p class="text-gray-800 text-lg font-normal">
+              Episode 2: The End of the Beginning
+            </p>
+          </li></a
+        >
+        <a href="">
+          <li class="">
+            <p class="text-gray-800 text-lg font-normal">Episode 3: Gotcha!</p>
+          </li></a
+        >
+
+        <!-- Add more reviews here -->
+      </ul>
+    </div>
+    <!-- Buttons -->
+    <div class="containe flex flex-row mt-3 justify-end">
+      <button
+        class="bg-[#DF8931] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#F4BA7E] active:bg-[#DF8931]"
+      >
+        Tonton Sekarang
+      </button>
+    </div>
+    <!-- Description & Poster -->
+    <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
+      <div class="">
+        <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
+          Deskripsi Tayangan:
+        </h1>
+        <p class="text-black text-lg ml-3 py-5 font-normal">
+          Sinopsis Episode: Lorem ipsum <br />
+          Durasi Episode: 1 jam <br />
+          Url Episode: https://... <br />
+          Tanggal Rilis Episode: 12/12/2021
+        </p>
+      </div>
+      <div class="h-96 w-48 bg-gray-700 ml-auto self-center mr-10 flex">
+        <p class="self-center mx-auto">Poster</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
