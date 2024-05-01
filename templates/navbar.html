@@ -1,10 +1,5 @@
 {% load static %}
-
-<!-- Bootstrap CSS -->
-
-<!-- Custom CSS -->
 <style>
-  /* Add custom styles here */
   .navbar {
     background-color: #f7cdb15f; /* Semi-transparent black background */
     backdrop-filter: blur(2px); /* Apply a blur effect */
@@ -23,19 +18,16 @@
     font-size: 12px; /* Adjust font size */
   }
 
-  /* Background color for toggler when active */
   .navbar-toggler {
     background-color: #f7cdb1; /* Change to desired color */
   }
 
-  /* Icon color for toggler when active */
   .navbar-toggler-icon {
     color: #ffffff; /* Change to desired color */
   }
 
-  /* Background color for nav items */
   .nav-item {
-    background-color: #f8f9fa; /* Change to desired color */
+    background-color: #f8f9fa;
   }
   p{
     color: #EA7F4D; /* Title color */
@@ -59,8 +51,6 @@
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-      {% if user.is_authenticated %}
-        <!-- For Logged In Users -->
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'tayangan_list' %}">Daftar Tayangan</a>
         </li>
@@ -79,18 +69,15 @@
         <li class="nav-item">
           <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:logout' %}">Logout</a>
         </li>
-      {% else %}
-        <!-- For Guest (Belum Login) -->
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'trailer' %}">Trailer Tayangan</a>
         </li>
-        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:login' %}">Log In</a>
+        </li>
       </ul>
     </div>
   </nav>
-
-  <!-- Bootstrap JS and dependencies (jQuery) -->
-
 </body>
 
 </html>

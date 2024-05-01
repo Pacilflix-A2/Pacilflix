@@ -1,0 +1,19 @@
+CREATE OR REPLACE FUNCTION check_delete_tayangan_terunduh()
+RETURNS TRIGGER AS
+$$
+BEGIN
+    -- Check if the record to be deleted is within the last 24 hours
+    IF OLD.timestamp >= CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' - INTERVAL '24 hours' AND
+       OLD.timestamp <= CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' THEN
+        RAISE EXCEPTION 'Tayangan terunduh must be more than 24 hours old.';
+    ELSE
+        RETURN OLD;
+    END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER before_delete_tayangan_terunduh
+BEFORE DELETE ON TAYANGAN_TERUNDUH
+FOR EACH ROW
+EXECUTE FUNCTION check_delete_tayangan_terunduh();
