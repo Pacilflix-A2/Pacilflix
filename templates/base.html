@@ -10,7 +10,8 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      type="text/css"
+      href="{% static 'tayangan/fonts/lexend/lexend.css' %}"
     />
     <link
       rel="stylesheet"
@@ -24,11 +25,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    {% block navbar %} {% include 'navbar.html' %} {% endblock %}
-    <div class="container" style="margin-top: 80px">
-      <!-- Increased margin-top -->
-      {% block content %} {% endblock %}
+    {% block navbar %}
+    {% include 'navbar.html' %}
+    {% endblock %}
+    <div class="container" style="margin-top: 80px;"> <!-- Increased margin-top -->
+        {% block content %}
+        {% endblock %}
     </div>
-    {% block extra_js %} {% endblock %}
-  </body>
+    {% block extra_js %}
+    {% endblock %}
+</body>
 </html>
