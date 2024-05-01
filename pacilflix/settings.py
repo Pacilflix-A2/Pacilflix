@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+from os import getenv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,10 +81,21 @@ WSGI_APPLICATION = 'pacilflix.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Add these at the top of your settings.py
+
+
+# Replace the DATABASES section of your settings.py with this
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pacilflix',  # Replace with your database name
+        'USER': 'pacilflix_owner',  # Specify the correct database role
+        'PASSWORD': 'flEY5WkB7Jte',  # Specify the password for the role
+        'HOST': 'ep-floral-moon-a1o69iw8.ap-southeast-1.aws.neon.tech',
+        'PORT': '',  # If using default port, leave it empty
+        'OPTIONS': {
+            'sslmode': 'require',  # Ensure SSL is configured correctly if required
+        },
     }
 }
 
