@@ -98,11 +98,12 @@
       </tr>
     </thead>
     <tbody>
-      {% for judul, waktu in daftar_unduhan %}
+      {% for item in daftar_unduhan %}
         <tr>
-          <td>{{ judul }}</td>
-          <td>{{ waktu }}</td>
+          <td>{{ item.judul }}</td>
+          <td>{{ item.timestamp }}</td>
           <td>
+            <!-- Use the add button to trigger the modal -->
             <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-toggle="modal" data-target="#downloadModal" data-title="{{ judul }}">Delete</button>
           </td>
         </tr>

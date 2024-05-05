@@ -15,6 +15,7 @@ from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -88,17 +89,17 @@ WSGI_APPLICATION = 'pacilflix.wsgi.application'
 
 # Replace the DATABASES section of your settings.py with this
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pacilflix',  # Replace with your database name
-        'USER': 'pacilflix_owner',  # Specify the correct database role
-        'PASSWORD': 'flEY5WkB7Jte',  # Specify the password for the role
-        'HOST': 'ep-floral-moon-a1o69iw8.ap-southeast-1.aws.neon.tech',
-        'PORT': '',  # If using default port, leave it empty
-        'OPTIONS': {
-            'sslmode': 'require',  # Ensure SSL is configured correctly if required
-        },
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': getenv('PGDATABASE'),
+    'USER': getenv('PGUSER'),
+    'PASSWORD': getenv('PGPASSWORD'),
+    'HOST': getenv('PGHOST'),
+    'PORT': getenv('PGPORT', 5432),
+    'OPTIONS': {
+      'sslmode': 'require',
+    },
+  }
 }
 
 
