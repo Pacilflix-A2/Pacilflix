@@ -43,7 +43,9 @@
       <img src="{% static 'images/logo.png' %}" alt="Logo">
       <img src="{% static 'images/nama.png' %}" alt="Nama">
     </a>
-    <p>Username</p>
+    {% if request.COOKIES.is_authenticated %}
+    <p>{{ request.COOKIES.username }}</p>
+    {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -51,6 +53,7 @@
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
+        {% if request.COOKIES.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'tayangan_list' %}">Daftar Tayangan</a>
         </li>
@@ -69,15 +72,18 @@
         <li class="nav-item">
           <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:logout' %}">Logout</a>
         </li>
+        {% else %}
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'trailer' %}">Trailer Tayangan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:login' %}">Log In</a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
 </body>
+
 
 </html>
