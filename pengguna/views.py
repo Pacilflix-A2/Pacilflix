@@ -1,5 +1,10 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.shortcuts import render
+from query.query import *
+from query.auth import *
 
 
 def register(request):
@@ -39,3 +44,39 @@ def login_user(request):
 
 def logout_user(request):
     return redirect('main:show_main')
+
+#Hafiz make
+def login(request):
+    context = {"error": ""}
+    if request.method == "POST":
+        # GET DATA
+        nama = request.POST.get("username")
+        password = request.POST.get("password")
+        result = query_sql(f"SELECT username, asal_negara FROM pengguna WHERE username='{nama}' AND password='{password}';")
+        print(result)
+        
+        if len(result) != 0:
+            username = result[0][0]
+            negara = result[0][1]
+            response = HttpResponseRedirect(reverse("tayangan_list"))
+            
+            # SET COOKIES
+            response.set_cookie('username', username)
+            response.set_cookie('negara', negara)
+            response.set_cookie('is_authenticated', "True")
+            
+            # REDIRECT
+            return response
+        else:
+            context = {"is_error": True}
+
+    return render(request, 'login.html', context)
+
+def logout(request):
+    # DELETE COOKIES
+    response = HttpResponseRedirect(reverse('main:show_main'))
+    response.delete_cookie('username')
+    response.delete_cookie('negara')
+    response.delete_cookie('is_authenticated')
+
+    return response
