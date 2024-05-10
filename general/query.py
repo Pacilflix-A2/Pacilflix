@@ -4,11 +4,15 @@ def add_query(query):
   connection.cursor().execute(query)
   connection.close()
 
-def query_sql(query):
+def query_select(query):
   with connection.cursor() as cursor:
     cursor.execute(query)
     result = cursor.fetchall()
     return result
+  
+def query_delete(query):
+  with connection.cursor() as cursor:
+    cursor.execute(query)
 
 def parse(result):
     data = result[0][0]

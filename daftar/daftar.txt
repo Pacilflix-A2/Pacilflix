@@ -4,7 +4,7 @@ $$
 BEGIN
     IF OLD.timestamp >= CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' - INTERVAL '24 hours' AND
        OLD.timestamp <= CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' THEN
-        RAISE EXCEPTION 'Tayangan terunduh must be more than 24 hours old.';
+        RAISE EXCEPTION 'Tayangan terunduh harus lebih dari satu hari untuk dihapus';
     ELSE
         RETURN OLD;
     END IF;

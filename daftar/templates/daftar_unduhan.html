@@ -104,12 +104,16 @@
           <td>{{ item.timestamp }}</td>
           <td>
             <!-- Use the add button to trigger the modal -->
-            <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-toggle="modal" data-target="#downloadModal" data-title="{{ judul }}">Delete</button>
+            <!-- <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-toggle="modal" data-target="#downloadModal" data-title="{{ judul }}">Delete</button> -->
+            <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-title="{{ item.judul }}" data-timestamp="{{ item.timestamp }}">Delete</button>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
+  <input type="hidden" id="delete-url" value="{% url 'daftar:delete_unduhan' %}">
+  <input type="hidden" id="csrf-token" value="{% csrf_token %}">
+
 </div>
 
 <!-- Modal for download success -->
@@ -131,23 +135,57 @@
 </div>
 
 <script>
-  // JavaScript to handle add button click and populate modal with correct title
-  document.querySelectorAll('.favoriteBtn').forEach(item => {
-    item.addEventListener('click', event => {
-      const title = event.target.getAttribute('data-title');
-      document.getElementById('downloadTitle').innerText = title;
-      // Calculate expiry date (example: current time + 7 days)
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + 7);
-      document.getElementById('expiryDate').innerText = expiryDate.toLocaleDateString('en-US');
-    });
-  });
+    $('.favoriteBtn').click(function() {
+        var judul = $(this).data('title');
+        var timestamp = $(this).data('timestamp');
+        var button = $(this); // Store $(this) in a variable
+        var deleteUrl = $('#delete-url').val(); // Get the delete URL from the hidden input field
+        var csrfToken = $('#csrf-token').val(); // Get the CSRF token value
 
-  // JavaScript to close the modal when the "Menuju Daftar Unduhan" button is clicked
-  document.getElementById('gotoUnduhanBtn').addEventListener('click', () => {
-    // Close the modal
-    $('#downloadModal').modal('hide');
-  });
+        $.ajax({
+            url: deleteUrl,
+            type: 'POST',
+            data: {
+                'judul': judul,
+                'timestamp': timestamp,
+                'csrfmiddlewaretoken': csrfToken // Include CSRF token in the data
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    // Item deleted successfully, you can update the UI as needed
+                    alert('Item deleted successfully');
+                    // For example, you can remove the table row containing the deleted item
+                    button.closest('tr').remove(); // Use the stored button variable here
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    });
+
+
+
+  // // JavaScript to handle add button click and populate modal with correct title
+  // document.querySelectorAll('.favoriteBtn').forEach(item => {
+  //   item.addEventListener('click', event => {
+  //     const title = event.target.getAttribute('data-title');
+  //     document.getElementById('downloadTitle').innerText = title;
+  //     // Calculate expiry date (example: current time + 7 days)
+  //     const expiryDate = new Date();
+  //     expiryDate.setDate(expiryDate.getDate() + 7);
+  //     document.getElementById('expiryDate').innerText = expiryDate.toLocaleDateString('en-US');
+  //   });
+  // });
+
+  // // JavaScript to close the modal when the "Menuju Daftar Unduhan" button is clicked
+  // document.getElementById('gotoUnduhanBtn').addEventListener('click', () => {
+  //   // Close the modal
+  //   $('#downloadModal').modal('hide');
+  // });
 </script>
 
 {% endblock content %}

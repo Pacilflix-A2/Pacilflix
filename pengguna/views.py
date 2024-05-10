@@ -3,8 +3,8 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
-from query.query import *
-from query.auth import *
+from general.query import *
+from general.auth import *
 
 
 def register(request):
@@ -52,7 +52,7 @@ def login(request):
         # GET DATA
         nama = request.POST.get("username")
         password = request.POST.get("password")
-        result = query_sql(f"SELECT username, asal_negara FROM pengguna WHERE username='{nama}' AND password='{password}';")
+        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{nama}' AND password='{password}';")
         print(result)
         
         if len(result) != 0:
