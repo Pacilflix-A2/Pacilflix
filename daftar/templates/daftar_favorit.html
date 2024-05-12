@@ -78,7 +78,15 @@
       outline: none;
       box-shadow: none;
     }
+    a {
+      color: #E76838; /* Change link color to match style */
+      text-decoration: none; /* Remove underline */
+    }
 
+    /* Hover color for links */
+    a:hover {
+      color: #73261B; /* Change hover color to match style */
+    }
 </style>
 
 <div class="container">
@@ -94,7 +102,7 @@
     <tbody>
       {% for item in daftar_favorit %}
         <tr>
-          <td>{{ item.judul }}</td>
+          <td><a href="{% url 'daftar:detail_favorit' item.judul item.timestamp %}">{{ item.judul }}</a></td>
           <td>{{ item.timestamp }}</td>
           <td>
             <!-- Use the add button to trigger the modal -->
