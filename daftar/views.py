@@ -137,3 +137,33 @@ def delete_favorit_item(request):
             return JsonResponse({'success': False, 'error': str(e).split("\n")[0]})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    
+def detail_favorit(request, judul, timestamp):
+    if not is_authenticated(request):
+        return render(request, '404.html')
+    nama = get_current_user(request)['username']
+    fetch_data = query_select(f"select id_tayangan from tayangan_memiliki_daftar_favorit where username = '{nama}' and  timestamp = '{timestamp}'")
+    daftar_tayangan = [{'judul': parse(query_select(f"select judul from tayangan where id = '{row[0]}'"))} for row in fetch_data]
+    context = {
+        'judul' : judul,
+        'timestamp' : timestamp,
+        'daftar_tayangan': daftar_tayangan,
+    }
+    return render(request, "detail_favorit.html", context)
+
+@csrf_exempt
+def delete_favorit_tayangan(request):
+    if request.method == 'POST':
+        judul = request.GET.get('judul')
+        timestamp = request.GET.get('timestamp')
+        try:
+            id_tayangan = parse(query_select(f"select id from tayangan where judul = '{judul}'"))
+            with connection.cursor() as cursor:
+                cursor.execute(f"delete from tayangan_memiliki_daftar_favorit where id_tayangan = '{id_tayangan}' and timestamp = '{timestamp}' and username = '{get_current_user(request)['username']}'")
+                cursor.close()
+                connection.close()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e).split("\n")[0]})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
