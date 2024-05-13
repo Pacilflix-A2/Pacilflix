@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from general.query import *
 from general.auth import *
-
+from django.views.decorators.csrf import csrf_exempt
 
 def register(request):
     # if request.user.is_authenticated:
@@ -46,6 +46,7 @@ def logout_user(request):
     return redirect('main:show_main')
 
 #Hafiz make
+@csrf_exempt
 def login(request):
     context = {"error": ""}
     if request.method == "POST":
