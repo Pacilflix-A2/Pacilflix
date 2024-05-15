@@ -1,47 +1,61 @@
-import datetime
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render
 from django.contrib import messages 
-from django.contrib.auth import authenticate, login, logout
-from pengguna.forms import UserRegisterForm
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
+from general.query import *
+
 def register(request):
-    if request.user.is_authenticated:
+    if request.COOKIES.get('is_authenticated', '') == "True":
         return HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
 
-    form = UserRegisterForm()
-
+    context = {"error": ""}
     if request.method == "POST":
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
+        username = request.POST.get("username")
+        password = request.POST.get("password1")
+        asal_negara = request.POST.get("negara")
+        
+        try:
+            add_query(f"INSERT INTO pengguna (username, password, asal_negara) VALUES ('{username}', '{password}', '{asal_negara}');")
             messages.success(request, 'Your account has been successfully created!')
-            return redirect('pengguna:login')
-    context = {'form':form}
+            response = HttpResponseRedirect(reverse("pengguna:login"))
+            return response
+        except IntegrityError:
+            context["error"] = f"Username {username} already exists."
+
     return render(request, 'register.html', context)
 
 def login_user(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse("main:show_main"))  # Ubah ke halaman daftar tayangan
+    if request.COOKIES.get('is_authenticated', '') == "True":
+        return HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
+
+    context = {"error": ""}
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{username}' AND password='{password}';")
         
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        if len(result) != 0:
+            username = result[0][0]
+            negara = result[0][1]
+            response = HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
 
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            response = HttpResponseRedirect(reverse("main:show_main")) 
-            response.set_cookie('last_login', str(datetime.datetime.now()))
+            response.set_cookie('username', username)
+            response.set_cookie('negara', negara)
+            response.set_cookie('is_authenticated', "True")
+            
             return response
         else:
-            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
-    context = {}
+            context["error"] = "Sorry, incorrect username or password. Please try again."
+
     return render(request, 'login.html', context)
 
 def logout_user(request):
-    logout(request)
-    return redirect('main:show_main')
+    response = HttpResponseRedirect(reverse('main:show_main')) # Ubah ke halaman trailer tayangan
+
+    response.delete_cookie('username')
+    response.delete_cookie('negara')
+    response.delete_cookie('is_authenticated')
+    
+    return response
