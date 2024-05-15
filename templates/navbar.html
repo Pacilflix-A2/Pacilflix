@@ -53,7 +53,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-      {% if user.is_authenticated %}
+      {% if request.COOKIES.is_authenticated %}
         <!-- For Logged In Users -->
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Daftar Tayangan</a>
@@ -78,7 +78,7 @@
         <li class="nav-item">
           <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Trailer Tayangan</a>
         </li>
-        {% endif %}
+      {% endif %}
       </ul>
     </div>
   </nav>
