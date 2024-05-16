@@ -7,6 +7,7 @@ from general.query import *
 from general.auth import *
 from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def register(request):
     if request.COOKIES.get('is_authenticated', '') == "True":
         return HttpResponseRedirect(reverse("tayangan_list"))
