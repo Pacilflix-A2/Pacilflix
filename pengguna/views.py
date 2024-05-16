@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.contrib import messages 
-from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from general.query import *
@@ -12,7 +11,7 @@ def register(request):
     if request.COOKIES.get('is_authenticated', '') == "True":
         return HttpResponseRedirect(reverse("tayangan_list"))
 
-    context = {"error": ""}
+    context = {}
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password1")
@@ -23,8 +22,9 @@ def register(request):
             messages.success(request, 'Your account has been successfully created!')
             response = HttpResponseRedirect(reverse("pengguna:login"))
             return response
-        except IntegrityError:
-            context["error"] = f"Username {username} already exists."
+        except Exception as e:
+            error_message = str(e)
+            messages.error(request, error_message.split("CONTEXT")[0].strip() )
 
     return render(request, 'register.html', context)
   
@@ -33,7 +33,7 @@ def login_user(request):
     if request.COOKIES.get('is_authenticated', '') == "True":
         return HttpResponseRedirect(reverse("tayangan_list"))
 
-    context = {"error": ""}
+    context = {}
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -50,7 +50,7 @@ def login_user(request):
             
             return response
         else:
-            context["error"] = "Sorry, incorrect username or password. Please try again."
+            messages.error(request, "Sorry, incorrect username or password. Please try again.")
 
     return render(request, 'login.html', context)
 

@@ -73,8 +73,10 @@
 <div class="register-container">
   <div class="register-form">
     <h2 class="register-title">REGISTER</h2>
-    {% if error %}
-        <p style="color: #b2341c;" class="error">{{ error }}</p>
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: #b2341c; font-weight: 500; margin-bottom: 10px;">{{ message }}</div>
+        {% endfor %}
     {% endif %}
     <form method="POST" action="{% url 'pengguna:register' %}">
       {% csrf_token %}
