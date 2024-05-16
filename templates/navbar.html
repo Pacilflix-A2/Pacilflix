@@ -1,10 +1,5 @@
 {% load static %}
-
-<!-- Bootstrap CSS -->
-
-<!-- Custom CSS -->
 <style>
-  /* Add custom styles here */
   .navbar {
     background-color: #f7cdb15f; /* Semi-transparent black background */
     backdrop-filter: blur(2px); /* Apply a blur effect */
@@ -23,19 +18,21 @@
     font-size: 12px; /* Adjust font size */
   }
 
-  /* Background color for toggler when active */
   .navbar-toggler {
     background-color: #f7cdb1; /* Change to desired color */
   }
 
-  /* Icon color for toggler when active */
   .navbar-toggler-icon {
     color: #ffffff; /* Change to desired color */
   }
 
-  /* Background color for nav items */
   .nav-item {
-    background-color: #f8f9fa; /* Change to desired color */
+    background-color: #f8f9fa;
+  }
+  p{
+    color: #EA7F4D; /* Title color */
+    font-size: 20px;
+    font-weight: bold;
   }
 </style>
 
@@ -46,45 +43,47 @@
       <img src="{% static 'images/logo.png' %}" alt="Logo">
       <img src="{% static 'images/nama.png' %}" alt="Nama">
     </a>
+    {% if request.COOKIES.is_authenticated %}
+    <p>{{ request.COOKIES.username }}</p>
+    {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
+    
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-      {% if request.COOKIES.is_authenticated %}
-        <!-- For Logged In Users -->
+        {% if request.COOKIES.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Daftar Tayangan</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'tayangan_list' %}">Daftar Tayangan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Daftar Kontributor</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'kontributor' %}">Daftar Kontributor</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Kelola Daftar Favorit</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'daftar:daftar_favorit' %}">Kelola Daftar Favorit</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Kelola Daftar Unduhan</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'daftar:daftar_unduhan' %}">Kelola Daftar Unduhan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Kelola Langganan</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'kelola' %}">Kelola Langganan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:logout' %}">Logout</a>
         </li>
-      {% else %}
-        <!-- For Guest (Belum Login) -->
+        {% else %}
         <li class="nav-item">
-          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="#">Trailer Tayangan</a>
+          <a class="nav-link" style="color: #EA7F4D;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'trailer' %}">Trailer Tayangan</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color: #B2341C;background-color: #f7cdb15f;backdrop-filter: blur(2px); font-weight: bold;" href="{% url 'pengguna:login' %}">Log In</a>
         </li>
       {% endif %}
       </ul>
     </div>
   </nav>
-
-  <!-- Bootstrap JS and dependencies (jQuery) -->
-
 </body>
+
 
 </html>

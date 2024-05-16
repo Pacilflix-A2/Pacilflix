@@ -3,12 +3,13 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
 from general.query import *
+from general.auth import *
+from django.views.decorators.csrf import csrf_exempt
 
 def register(request):
     if request.COOKIES.get('is_authenticated', '') == "True":
-        return HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
+        return HttpResponseRedirect(reverse("tayangan_list"))
 
     context = {"error": ""}
     if request.method == "POST":
@@ -25,10 +26,11 @@ def register(request):
             context["error"] = f"Username {username} already exists."
 
     return render(request, 'register.html', context)
-
+  
+@csrf_exempt
 def login_user(request):
     if request.COOKIES.get('is_authenticated', '') == "True":
-        return HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
+        return HttpResponseRedirect(reverse("tayangan_list"))
 
     context = {"error": ""}
     if request.method == "POST":
@@ -39,7 +41,7 @@ def login_user(request):
         if len(result) != 0:
             username = result[0][0]
             negara = result[0][1]
-            response = HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
+            response = HttpResponseRedirect(reverse("tayangan_list"))
 
             response.set_cookie('username', username)
             response.set_cookie('negara', negara)
@@ -52,7 +54,7 @@ def login_user(request):
     return render(request, 'login.html', context)
 
 def logout_user(request):
-    response = HttpResponseRedirect(reverse('main:show_main')) # Ubah ke halaman trailer tayangan
+    response = HttpResponseRedirect(reverse('main:show_main'))
 
     response.delete_cookie('username')
     response.delete_cookie('negara')

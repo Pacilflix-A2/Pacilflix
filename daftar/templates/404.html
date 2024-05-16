@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<title>404 - Page Not Found</title>
+    <style>
+        body {
+            background-color: #FDF5EF; /* Background color */
+            font-family: Arial, sans-serif; /* Set font family */
+        }
+
+        .container {
+            margin-top: 50px; /* Adjust the top margin */
+            text-align: center; /* Center align the content */
+        }
+
+        h2 {
+            color: #E76838; /* Title color */
+            font-size: 24px; /* Title font size */
+            margin-bottom: 20px; /* Add some spacing between title and table */
+        }
+
+        p {
+            color: #73261B; /* Text color */
+            font-size: 16px; /* Font size for paragraph */
+            margin-bottom: 20px; /* Add some spacing below paragraph */
+        }
+
+        .btn {
+            background-color: #EA7F4D; /* Button background color */
+            border-color: #EA7F4D; /* Button border color */
+            color: #FFF; /* Button text color */
+            font-size: 14px; /* Button font size */
+            padding: 10px 20px; /* Adjust padding for buttons */
+            text-decoration: none; /* Remove underline */
+            border-radius: 4px; /* Add border radius */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .btn:hover {
+            background-color: #E76838; /* Button hover background color */
+        }
+    </style>
+<body>
+    <div class="container">
+        <h2>404 - Page Not Found</h2>
+        <p>Sorry, the page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+        <a href="{% url 'main:show_main' %}" class="btn">Go to Login Page</a>
+    </div>
+</body>
+{% endblock content %}

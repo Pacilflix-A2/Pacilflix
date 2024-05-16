@@ -22,8 +22,11 @@ from django.conf.urls.static import static
 from pacilflix import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('daftar/', include('daftar.urls')),
+    path('', include('daftar.urls')),
+    path('kontributor/', include('kontributor.urls')),
+    path('langganan/', include('langganan.urls')),
     path('', include('pengguna.urls')),
     path('', include('main.urls')),
+    path('trailer/', include('trailer.urls')),
+    path('tayangan/', include('tayangan.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

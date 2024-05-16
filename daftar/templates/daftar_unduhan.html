@@ -52,6 +52,39 @@
         background-color: #E76838; /* Button hover background color */
         border-color: #E76838; /* Button hover border color */
     }
+
+    /* Modal styling */
+    .modal-content {
+        background-color: #FBE7D9; /* Modal content background color */
+        color: #73261B; /* Modal content text color */
+    }
+
+    .modal-header {
+        border-bottom: none; /* Remove border bottom */
+    }
+
+    .modal-title {
+        color: #E76838; /* Modal title color */
+    }
+
+    .modal-body {
+        padding: 20px; /* Padding for modal body */
+    }
+
+    .modal-footer {
+        border-top: none; /* Remove border top */
+    }
+
+    .btn-primary {
+        background-color: #EA7F4D; /* Button primary background color */
+        border-color: #EA7F4D; /* Button primary border color */
+        color: #FFFFFF; /* Button primary text color */
+    }
+
+    .btn-primary:hover {
+        background-color: #E76838; /* Button primary hover background color */
+        border-color: #E76838; /* Button primary hover border color */
+    }
 </style>
 
 <div class="container">
@@ -65,101 +98,94 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Film 1</td>
-        <td>2024-02-24 10:00:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr><var></var>
-      <tr>
-        <td>Film 2</td>
-        <td>2024-04-23 14:30:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Film 3</td>
-        <td>2024-03-20 00:00:00</td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm">Delete</button>
-        </td>
-      </tr>
+      {% for item in daftar_unduhan %}
+        <tr>
+          <td>{{ item.judul }}</td>
+          <td>{{ item.timestamp }}</td>
+          <td>
+            <!-- Use the add button to trigger the modal -->
+            <!-- <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-toggle="modal" data-target="#downloadModal" data-title="{{ judul }}">Delete</button> -->
+            <button type="button" class="btn btn-danger btn-sm favoriteBtn" data-title="{{ item.judul }}" data-timestamp="{{ item.timestamp }}">Delete</button>
+          </td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
+  <input type="hidden" id="delete-url" value="{% url 'daftar:delete_unduhan' %}">
+  <input type="hidden" id="csrf-token" value="{% csrf_token %}">
+
 </div>
+
+<!-- Modal for download success -->
+<div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="downloadModalLabel">Sukses Menambahkan Tayangan ke Daftar Unduhan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Selamat! Anda telah berhasil mengunduh <span id="downloadTitle"></span> dan akan berlaku hingga <span id="expiryDate"></span>. Cek informasi selengkapnya pada halaman daftar unduhan.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="gotoUnduhanBtn">Menuju Daftar Unduhan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('.favoriteBtn').click(function() {
+        var judul = $(this).data('title');
+        var timestamp = $(this).data('timestamp');
+        var button = $(this); // Store $(this) in a variable
+        var deleteUrl = $('#delete-url').val(); // Get the delete URL from the hidden input field
+        var csrfToken = $('#csrf-token').val(); // Get the CSRF token value
+
+        $.ajax({
+            url: deleteUrl,
+            type: 'POST',
+            data: {
+                'judul': judul,
+                'timestamp': timestamp,
+                'csrfmiddlewaretoken': csrfToken // Include CSRF token in the data
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    // Item deleted successfully, you can update the UI as needed
+                    alert('Item deleted successfully');
+                    // For example, you can remove the table row containing the deleted item
+                    button.closest('tr').remove(); // Use the stored button variable here
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    });
+
+
+
+  // // JavaScript to handle add button click and populate modal with correct title
+  // document.querySelectorAll('.favoriteBtn').forEach(item => {
+  //   item.addEventListener('click', event => {
+  //     const title = event.target.getAttribute('data-title');
+  //     document.getElementById('downloadTitle').innerText = title;
+  //     // Calculate expiry date (example: current time + 7 days)
+  //     const expiryDate = new Date();
+  //     expiryDate.setDate(expiryDate.getDate() + 7);
+  //     document.getElementById('expiryDate').innerText = expiryDate.toLocaleDateString('en-US');
+  //   });
+  // });
+
+  // // JavaScript to close the modal when the "Menuju Daftar Unduhan" button is clicked
+  // document.getElementById('gotoUnduhanBtn').addEventListener('click', () => {
+  //   // Close the modal
+  //   $('#downloadModal').modal('hide');
+  // });
+</script>
+
 {% endblock content %}

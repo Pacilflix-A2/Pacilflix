@@ -35,9 +35,13 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'tayangan',
+    'trailer',
     'daftar',
     'pengguna',
     'main',
+    'kontributor',
+    'langganan',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +84,10 @@ WSGI_APPLICATION = 'pacilflix.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Add these at the top of your settings.py
+
+
+# Replace the DATABASES section of your settings.py with this
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
