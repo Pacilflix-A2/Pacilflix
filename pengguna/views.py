@@ -1,82 +1,63 @@
-import datetime
-from django.shortcuts import redirect, render
+from django.shortcuts import render
+from django.contrib import messages 
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.shortcuts import render
 from general.query import *
 from general.auth import *
-
+from django.views.decorators.csrf import csrf_exempt
 
 def register(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect(reverse("main:show_main")) # Ubah ke halaman daftar tayangan
+    if request.COOKIES.get('is_authenticated', '') == "True":
+        return HttpResponseRedirect(reverse("tayangan_list"))
 
-    # form = UserRegisterForm()
-
-    # if request.method == "POST":
-    #     form = UserRegisterForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, 'Your account has been successfully created!')
-    #         return redirect('pengguna:login')
-    # context = {'form':form}
-    return render(request, 'register.html')
-
-def login_user(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect(reverse("main:show_main"))  # Ubah ke halaman daftar tayangan
-        
-    # if request.method == 'POST':
-    #     username = request.POST.get('username')
-    #     password = request.POST.get('password')
-
-    #     user = authenticate(request, username=username, password=password)
-
-    #     if user is not None:
-    #         login(request, user)
-    #         response = HttpResponseRedirect(reverse("main:show_main")) 
-    #         response.set_cookie('last_login', str(datetime.datetime.now()))
-    #         return response
-    #     else:
-    #         messages.info(request, 'Sorry, incorrect username or password. Please try again.')
-    # context = {}
-    return render(request, 'login.html')
-
-def logout_user(request):
-    return redirect('main:show_main')
-
-#Hafiz make
-def login(request):
     context = {"error": ""}
     if request.method == "POST":
-        # GET DATA
-        nama = request.POST.get("username")
+        username = request.POST.get("username")
+        password = request.POST.get("password1")
+        asal_negara = request.POST.get("negara")
+        
+        try:
+            add_query(f"INSERT INTO pengguna (username, password, asal_negara) VALUES ('{username}', '{password}', '{asal_negara}');")
+            messages.success(request, 'Your account has been successfully created!')
+            response = HttpResponseRedirect(reverse("pengguna:login"))
+            return response
+        except IntegrityError:
+            context["error"] = f"Username {username} already exists."
+
+    return render(request, 'register.html', context)
+  
+@csrf_exempt
+def login_user(request):
+    if request.COOKIES.get('is_authenticated', '') == "True":
+        return HttpResponseRedirect(reverse("tayangan_list"))
+
+    context = {"error": ""}
+    if request.method == "POST":
+        username = request.POST.get("username")
         password = request.POST.get("password")
-        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{nama}' AND password='{password}';")
-        print(result)
+        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{username}' AND password='{password}';")
         
         if len(result) != 0:
             username = result[0][0]
             negara = result[0][1]
             response = HttpResponseRedirect(reverse("tayangan_list"))
-            
-            # SET COOKIES
+
             response.set_cookie('username', username)
             response.set_cookie('negara', negara)
             response.set_cookie('is_authenticated', "True")
             
-            # REDIRECT
             return response
         else:
-            context = {"is_error": True}
+            context["error"] = "Sorry, incorrect username or password. Please try again."
 
     return render(request, 'login.html', context)
 
-def logout(request):
-    # DELETE COOKIES
+def logout_user(request):
     response = HttpResponseRedirect(reverse('main:show_main'))
+
     response.delete_cookie('username')
     response.delete_cookie('negara')
     response.delete_cookie('is_authenticated')
-
+    
     return response
