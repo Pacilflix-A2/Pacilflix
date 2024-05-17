@@ -68,12 +68,10 @@
   <div class="login-form">
     <h2 class="login-title">LOGIN</h2>
     {% if messages %}
-      <ul>
         {% for message in messages %}
-        <li style="color: #b2341c;">{{ message }}</li>
+            <div style="color: #b2341c; font-weight: 500; margin-bottom: 10px;">{{ message }}</div>
         {% endfor %}
-      </ul>
-    {% endif %} 
+    {% endif %}
     <form method="POST" action="{% url 'pengguna:login' %}">
       {% csrf_token %}
       <div class="form-group">

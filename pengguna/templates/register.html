@@ -73,28 +73,32 @@
 <div class="register-container">
   <div class="register-form">
     <h2 class="register-title">REGISTER</h2>
-    {% if form.errors %}
-      <ul>
-        {% for field, errors in form.errors.items %}
-          {% for error in errors %}
-          <li style="color: #b2341c;">{{ error }}</li>
-          {% endfor %}
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: #b2341c; font-weight: 500; margin-bottom: 10px;">{{ message }}</div>
         {% endfor %}
-      </ul>
     {% endif %}
     <form method="POST" action="{% url 'pengguna:register' %}">
       {% csrf_token %}
       <div class="form-group">
-        <label for="{{ form.username.id_for_label }}">Username</label>
-        {{ form.username }}
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required>
       </div>
       <div class="form-group">
-        <label for="{{ form.password1.id_for_label }}">Password</label>
-        {{ form.password1 }}
+        <label for="password1">Password</label>
+        <input type="password" id="password1" name="password1" class="form-control" required>
       </div>
       <div class="form-group">
-        <label for="{{ form.negara.id_for_label }}">Negara Asal</label>
-        {{ form.negara }}
+        <label for="negara">Negara Asal</label>
+        <select id="negara" name="negara" class="form-control" required>
+          <option value="" disabled selected>Pilih Negara Asal</option>
+          <option value="Singapore">Singapore</option>
+          <option value="Philippines">Philippines</option>
+          <option value="Thailand">Thailand</option>
+          <option value="Amerika">Amerika</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Indonesia">Indonesia</option>
+        </select>
       </div>
       <div class="button-container">
         <div class="button-half">
@@ -107,5 +111,4 @@
     </form>
   </div>
 </div>
-
 {% endblock content %}
