@@ -104,8 +104,35 @@
     </tbody>
   </table>
   <input type="hidden" id="delete-url" value="{% url 'daftar:delete_favorit_tayangan' %}">
-  <input type="hidden" id="csrf-token" value="{% csrf_token %}">
   <input type="hidden" id="timestamp" value="{{ timestamp }}">
+</div>
+
+<div class="modal fade" id="addToFavoriteModal" tabindex="-1" aria-labelledby="addToFavoriteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #E76838; color: #FFF;">
+        <h5 class="modal-title" id="addToFavoriteModalLabel">Tambah ke Daftar Favorit</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background-color: #FDF5EF; color: #73261B;">
+        <form id="addToFavoriteForm">
+          <div class="mb-3">
+            <label for="favoriteTitle" class="form-label">Pilih Daftar Favorit:</label>
+            <div class="custom-dropdown">
+              <select class="form-select" id="favoriteTitle" name="favoriteTitle">
+                <!-- Options for dropdown (You may populate these dynamically) -->
+                <option value="1">Daftar Favorit 1</option>
+                <option value="2">Daftar Favorit 2</option>
+                <option value="3">Daftar Favorit 3</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="background-color: #EA7F4D; border-color: #EA7F4D;">Tambah</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="csrf-token" style="color:  #FDF5EF;" value="{% csrf_token %}">
 </div>
 
 <script>
