@@ -29,4 +29,5 @@ urlpatterns = [
     path('', include('main.urls')),
     path('trailer/', include('trailer.urls')),
     path('tayangan/', include('tayangan.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
