@@ -95,15 +95,17 @@
 
 <div class="container">
   <h2>Daftar Kontributor</h2>
-  <div class="filter-container">
-    <select id="nameFilter">
-      <option value="">Filter by Name</option>
-      <option value="sutradara">Sutradara</option>
-      <option value="pemain">Pemain</option>
-      <option value="penulis_skenario">Penulis Skenario</option>
-    </select>
-  </div>
-  
+
+  <form method="get" action="">
+    <div class="filter-container">
+        <select id="roleFilter" name="role" onchange="this.form.submit()">
+            <option value="">Filter by Role</option>
+            <option value="Sutradara">Sutradara</option>
+            <option value="Pemain">Pemain</option>
+            <option value="Penulis_Skenario">Penulis Skenario</option>
+        </select>
+    </div>
+  </form>
   
   <table class="table">
     <thead>
@@ -115,61 +117,20 @@
       </tr>
     </thead>
     <tbody>
+      {% for contributor in contributors %}
       <tr>
-        <td>Elena</td>
-        <td>Sutradara</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
+          <td>{{ contributor.nama }}</td>
+          <td>
+            {% if selected_role %}
+                {{ selected_role }}
+            {% else %}
+                {{ contributor.tipe }} 
+            {% endif %}
+          </td>
+          <td>{{ contributor.jenis_kelamin }}</td>
+          <td>{{ contributor.kewarganegaraan }}</td>
       </tr>
-      <tr>
-        <td>Zahra</td>
-        <td>Pemain</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Kurniawan</td>
-        <td>Penulis Skenario</td>
-        <td>Laki-laki</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Elena</td>
-        <td>Sutradara</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Zahra</td>
-        <td>Pemain</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Kurniawan</td>
-        <td>Penulis Skenario</td>
-        <td>Laki-laki</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Elena</td>
-        <td>Sutradara</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Zahra</td>
-        <td>Pemain</td>
-        <td>Perempuan</td>
-        <td>Indonesia</td>
-      </tr>
-      <tr>
-        <td>Kurniawan</td>
-        <td>Penulis Skenario</td>
-        <td>Laki-laki</td>
-        <td>Indonesia</td>
-      </tr>
-
+      {% endfor %}
     </tbody>
   </table>
 </div>

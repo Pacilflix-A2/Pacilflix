@@ -115,26 +115,26 @@
     </thead>
     <tbody>
       <tr>
-        <td>Premium</td>
-        <td>49.000</td>
-        <td>4K</td>
-        <td>Ok</td>
+        <td>{{ paket.nama }}</td>
+        <td>{{ paket.harga }}</td>
+        <td>{{ paket.resolusi_layar }}</td>
+        <td>{{ paket.dukungan_perangkat }}</td>
       </tr>
     </tbody>
   </table>
 
   <h3>Pilih Metode Pembayaran:</h3>
-  <div class="filter-container">
-    <select id="nameFilter">
-      <option value="">Filter by Name</option>
-      <option value="transfer_bank">Transfer Bank</option>
-      <option value="kartu_kredit">Kartu Kredit</option>
-      <option value="e_wallet">E-Wallet</option>
-    </select>
-  </div>
-
-  <button type="button" class="btn btn-danger">
-    Bayar
-  </button>
+  <form action="{% url 'process_purchase' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="nama_paket" value="{{ paket.nama }}">
+    <div class="filter-container">
+        <select name="payment_method" id="paymentMethod">
+            {% for method in payment_methods %}
+            <option value="{{ method }}">{{ method }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-danger">Bayar</button>
+</form>
 </div>
 {% endblock content %}
