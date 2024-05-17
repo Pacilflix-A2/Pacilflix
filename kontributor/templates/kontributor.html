@@ -6,72 +6,71 @@
 
 <style>
     body {
-        background-color: #FDF5EF; /* Background color */
+        background-color: #FDF5EF; 
     }
 
     .container {
-        margin-top: 50px; /* Adjust the top margin */
-        text-align: center; /* Center align the content */
+        margin-top: 50px; 
+        text-align: center;
     }
 
     h2 {
-        color: #E76838; /* Title color */
-        font-size: 24px; /* Title font size */
-        margin-bottom: 20px; /* Add some spacing between title and table */
+        color: #E76838; 
+        font-size: 24px; 
+        margin-bottom: 20px; 
     }
 
     th, td {
-        color: #73261B; /* Text color */
-        font-size: 14px; /* Font size for table cells */
-        padding: 12px 15px; /* Adjust padding for table cells (increased padding) */
-        line-height: 1; /* Adjust line height for table cells */
-        white-space: nowrap; /* Prevent text wrapping */
-        overflow: hidden; /* Hide overflow */
-        text-overflow: ellipsis; /* Display ellipsis for overflow text */
+        color: #73261B; 
+        font-size: 14px;
+        padding: 12px 15px; 
+        line-height: 1; 
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis; 
     }
 
     tr {
-        height: 40px; /* Fixed height for table rows */
+        height: 40px; 
     }
 
     table {
-        background-color: #FBE7D9; /* Table background color */
-        font-size: 14px; /* Font size for the whole table */
-        table-layout: fixed; /* Use fixed table layout to enforce cell width */
-        width: 100%; /* Set table width to 100% */
+        background-color: #FBE7D9; 
+        font-size: 14px;
+        table-layout: fixed; 
+        width: 100%;
     }
 
     .btn-danger {
-        background-color: #EA7F4D; /* Button background color */
-        border-color: #EA7F4D; /* Button border color */
-        font-size: 12px; /* Button font size */
-        padding: 4px 8px; /* Adjust padding for buttons */
+        background-color: #EA7F4D; 
+        border-color: #EA7F4D; 
+        font-size: 12px;
+        padding: 4px 8px; 
     }
 
     .btn-danger:hover {
-        background-color: #E76838; /* Button hover background color */
-        border-color: #E76838; /* Button hover border color */
+        background-color: #E76838; 
+        border-color: #E76838; 
     }
 
     .filter-container {
-        text-align: center; /* Centers the dropdown if the container's width matches the table */
+        text-align: center; 
         margin-bottom: 20px;
     }
 
     .filter-container select {
-        width: 100%; /* Set the width to match the table */
-        padding: 10px; /* Add some padding inside the dropdown */
-        background-color: #FFF0E5; /* Assuming this is the table background color */
-        color: #A0522D; /* Assuming this is the color of the table header text */
-        border: 1px solid #A0522D; /* Same color for the border */
-        box-sizing: border-box; /* Include padding and border in the element's total width */
-        border-radius: 5px; /* Optional: adds rounded corners */
-        -webkit-appearance: none; /* Removes default style on Safari */
-        -moz-appearance: none; /* Removes default style on Firefox */
-        appearance: none; /* Removes default style for modern browsers */
+        width: 100%; 
+        padding: 10px; 
+        background-color: #FFF0E5; 
+        color: #A0522D; 
+        border: 1px solid #A0522D; 
+        box-sizing: border-box; 
+        border-radius: 5px; 
+        -webkit-appearance: none; 
+        -moz-appearance: none; 
+        appearance: none; 
     }
 
-    /* Style the dropdown arrow */
     .filter-container select {
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23A0522D" d="M7 10l5 5 5-5z"/></svg>');
         background-repeat: no-repeat;
@@ -79,16 +78,14 @@
         background-size: 12px;
     }
 
-    /* Optional: Style the dropdown on hover */
     .filter-container select:hover {
-        background-color: #FFEDE0; /* A lighter shade for hover effect */
+        background-color: #FFEDE0; 
         cursor: pointer;
     }
 
-    /* Style the options inside the dropdown */
     .filter-container select option {
-        background-color: #FFF0E5; /* Background color for the options */
-        color: #A0522D; /* Text color for the options */
+        background-color: #FFF0E5;
+        color: #A0522D;
     }
 
 </style>

@@ -9,6 +9,8 @@ from general.query import *
 from general.auth import *
 
 def kelola(request):
+    if not is_authenticated(request):
+        return render(request, '404.html')
     username = get_current_user(request)['username']
     dukungan_perangkat = request.session.get('dukungan_perangkat')
 
@@ -22,7 +24,6 @@ def kelola(request):
         LIMIT 1
     """)
 
-    print(active_subscription)
     active_subscription = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': dukungan_perangkat, 'start_date_time': row[4], 'end_date_time': row[5], 'metode_pembayaran': row[6], 'timestamp_pembayaran': row[7]}
                         for row in active_subscription]
 
@@ -44,7 +45,6 @@ def kelola(request):
         ORDER BY T.start_date_time DESC
     """)
 
-    print(transaction_history)
     transaction_history = [{'nama_paket': row[0], 'start_date_time': row[1], 'end_date_time': row[2], 'metode_pembayaran': row[3], 'timestamp_pembayaran': row[4], 'total_pembayaran': row[5]}
                         for row in transaction_history]
 
@@ -57,7 +57,8 @@ def kelola(request):
     return render(request, "kelola.html", context)
 
 def display_beli(request, nama_paket):
-    print(request.method)
+    if not is_authenticated(request):
+        return render(request, '404.html')
     if request.method == 'POST':
         harga = request.POST.get('harga')
         resolusi_layar = request.POST.get('resolusi_layar')
@@ -76,8 +77,9 @@ def display_beli(request, nama_paket):
     }
     return render(request, 'beli.html', context)
 
-# @login_required
 def process_purchase(request):
+    if not is_authenticated(request):
+        return render(request, '404.html')
     if request.method == 'POST':
         username = get_current_user(request)['username']
         nama_paket = request.POST.get('nama_paket')
@@ -87,7 +89,6 @@ def process_purchase(request):
 
         current_timestamp = timezone.now()
         start_date = current_timestamp
-        print(start_date)
         end_date = start_date + timezone.timedelta(days=30)
 
         existing_transaction = query_select(f"""

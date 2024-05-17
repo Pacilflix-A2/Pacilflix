@@ -6,6 +6,8 @@ from general.query import *
 from general.auth import *
 
 def kontributor(request):
+    if not is_authenticated(request):
+        return render(request, '404.html')
     role_filter = request.GET.get('role', '')
     formatted_role_filter = role_filter.replace('_', ' ').title()
 
