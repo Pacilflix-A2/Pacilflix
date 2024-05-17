@@ -116,6 +116,9 @@
         <td>
           <form action="{% url 'display_beli' package.nama %}" method="post">
             {% csrf_token %}
+            <input type="hidden" name="harga" value="{{ package.harga }}">
+            <input type="hidden" name="resolusi_layar" value="{{ package.resolusi_layar }}">
+            <input type="hidden" name="dukungan_perangkat" value="{{ package.dukungan_perangkat }}">
             <button type="submit" class="btn btn-danger">Beli</button>
           </form>
         </td>

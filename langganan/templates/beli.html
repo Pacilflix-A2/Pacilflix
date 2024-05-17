@@ -124,6 +124,24 @@
   </table>
 
   <h3>Pilih Metode Pembayaran:</h3>
+    <form action="{% url 'process_purchase' %}" method="post">
+      {% csrf_token %}
+      <!-- Hidden inputs for package details -->
+      <input type="hidden" name="nama_paket" value="{{ paket.nama }}">
+      <input type="hidden" name="harga" value="{{ paket.harga }}">
+      <input type="hidden" name="resolusi_layar" value="{{ paket.resolusi_layar }}">
+      <input type="hidden" name="dukungan_perangkat" value="{{ paket.dukungan_perangkat }}">
+      <div class="filter-container">
+          <select name="payment_method" id="paymentMethod">
+              {% for method in payment_methods %}
+              <option value="{{ method }}">{{ method }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <button type="submit" class="btn btn-danger">Bayar</button>
+    </form>
+
+  <!-- <h3>Pilih Metode Pembayaran:</h3>
   <form action="{% url 'process_purchase' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="nama_paket" value="{{ paket.nama }}">
@@ -136,5 +154,5 @@
     </div>
     <button type="submit" class="btn btn-danger">Bayar</button>
 </form>
-</div>
+</div> -->
 {% endblock content %}
