@@ -6,60 +6,60 @@
 
 <style>
     body {
-        background-color: #FDF5EF; /* Background color */
+        background-color: #FDF5EF;
     }
 
     .container {
-        margin-top: 50px; /* Adjust the top margin */
-        text-align: center; /* Center align the content */
+        margin-top: 50px; 
+        text-align: center;
     }
 
     h2 {
-        color: #E76838; /* Title color */
-        font-size: 24px; /* Title font size */
-        margin-bottom: 20px; /* Add some spacing between title and table */
+        color: #E76838; 
+        font-size: 24px; 
+        margin-bottom: 20px; 
     }
 
     h3 {
-        color: #73261B; /* Title color */
-        font-size: 16px; /* Title font size */
-        margin-bottom: 20px; /* Add some spacing between title and table */
+        color: #73261B; 
+        font-size: 16px; 
+        margin-bottom: 20px;
         text-align: left;
         margin-bottom: 5px;
     }
 
     th, td {
-        color: #73261B; /* Text color */
-        font-size: 14px; /* Font size for table cells */
-        padding: 12px 15px; /* Adjust padding for table cells (increased padding) */
-        line-height: 1; /* Adjust line height for table cells */
-        white-space: nowrap; /* Prevent text wrapping */
-        overflow: hidden; /* Hide overflow */
-        text-overflow: ellipsis; /* Display ellipsis for overflow text */
+        color: #73261B; 
+        font-size: 14px;
+        padding: 12px 15px; 
+        line-height: 1; 
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
     }
 
     tr {
-        height: 40px; /* Fixed height for table rows */
+        height: 40px; 
     }
 
     table {
-        background-color: #FBE7D9; /* Table background color */
-        font-size: 14px; /* Font size for the whole table */
-        table-layout: fixed; /* Use fixed table layout to enforce cell width */
-        width: 100%; /* Set table width to 100% */
+        background-color: #FBE7D9;
+        font-size: 14px; 
+        table-layout: fixed; 
+        width: 100%; 
         margin-bottom: 30px;
     }
 
     .btn-danger {
-        background-color: #EA7F4D; /* Button background color */
-        border-color: #EA7F4D; /* Button border color */
-        font-size: 12px; /* Button font size */
-        padding: 4px 24px; /* Adjust padding for buttons */
+        background-color: #EA7F4D; 
+        border-color: #EA7F4D; 
+        font-size: 12px; 
+        padding: 4px 24px;
     }
 
     .btn-danger:hover {
-        background-color: #E76838; /* Button hover background color */
-        border-color: #E76838; /* Button hover border color */
+        background-color: #E76838;
+        border-color: #E76838; 
     }
 
 </style>
@@ -79,15 +79,18 @@
       </tr>
     </thead>
     <tbody>
+      {% for sub in active_subscription %}
       <tr>
-        <td>Premium</td>
-        <td>49.000</td>
-        <td>4K</td>
-        <td>Ok</td>
-        <td>28 April 2024</td>
-        <td>28 Mei 2024</td>
+        <td>{{ sub.nama }}</td>
+        <td>{{ sub.harga }}</td>
+        <td>{{ sub.resolusi_layar }}</td>
+        <td>{{ sub.dukungan_perangkat }}</td>
+        <td>{{ sub.start_date_time }}</td>
+        <td>{{ sub.end_date_time }}</td>
       </tr>
-      
+      {% empty %}
+      <tr><td colspan="6">No active subscriptions found.</td></tr>
+      {% endfor %}
     </tbody>
   </table>
 
@@ -104,37 +107,24 @@
       </tr>
     </thead>
     <tbody>
+      {% for package in available_packages %}
       <tr>
-        <td>Premium</td>
-        <td>49.000</td>
-        <td>4K</td>
-        <td>Ok</td>
+        <td>{{ package.nama }}</td>
+        <td>{{ package.harga }}</td>
+        <td>{{ package.resolusi_layar }}</td>
+        <td>{{ package.dukungan_perangkat }}</td>
         <td>
-            <!-- <button type="button" class="btn btn-danger btn-sm">Beli</button> -->
-            <a href="{% url 'beli' %}" class="btn btn-danger">Beli</a>
+          <form action="{% url 'display_beli' package.nama %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="harga" value="{{ package.harga }}">
+            <input type="hidden" name="resolusi_layar" value="{{ package.resolusi_layar }}">
+            <input type="hidden" name="dukungan_perangkat" value="{{ package.dukungan_perangkat }}">
+            <button type="submit" class="btn btn-danger">Beli</button>
+          </form>
         </td>
       </tr>
-      <tr>
-        <td>Standar</td>
-        <td>29.000</td>
-        <td>1440p</td>
-        <td>Ok</td>
-        <td>
-            <a href="{% url 'beli' %}" class="btn btn-danger">Beli</a>
-            <!-- <button type="button" class="btn btn-danger btn-sm">Beli</button> -->
-        </td>
-      </tr>
-      <tr>
-        <td>Basic</td>
-        <td>19.000</td>
-        <td>720p</td>
-        <td>Ok</td>
-        <td>
-            <a href="{% url 'beli' %}" class="btn btn-danger">Beli</a>
-            <!-- <button type="button" class="btn btn-danger btn-sm">Beli</button> -->
-        </td>
-      </tr>
-    </tbody>
+      {% endfor %}
+    </tbody>    
   </table>
 
   <h3>Riwayat Transaksi</h3>
@@ -150,30 +140,20 @@
       </tr>
     </thead>
     <tbody>
+      {% for transaction in transaction_history %}
       <tr>
-        <td>Premium</td>
-        <td>28 April 2024</td>
-        <td>28 Mei 2024</td>
-        <td>Transfer Bank</td>
-        <td>28 April 2024</td>
-        <td>49.000</td>
+        <td>{{ transaction.nama_paket }}</td>
+        <td>{{ transaction.start_date_time }}</td>
+        <td>{{ transaction.end_date_time }}</td>
+        <td>{{ transaction.metode_pembayaran }}</td>
+        <td>{{ transaction.timestamp_pembayaran }}</td>
+        <td>{{ transaction.total_pembayaran }}</td>
       </tr>
+      {% empty %}
       <tr>
-        <td>Standar</td>
-        <td>28 Mei 2024</td>
-        <td>28 Juni 2024</td>
-        <td>Kartu kredit</td>
-        <td>28 April 2024</td>
-        <td>29.000</td>
+        <td colspan="6">No subscription found.</td>
       </tr>
-      <tr>
-        <td>Basic</td>
-        <td>28 Juni 2024</td>
-        <td>28 Juli 2024</td>
-        <td>E-Wallet</td>
-        <td>28 April 2024</td>
-        <td>19.000</td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
