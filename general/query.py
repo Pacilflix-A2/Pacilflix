@@ -4,9 +4,11 @@ def add_query(query):
   connection.cursor().execute(query)
   connection.close()
 
-def query_select(query):
+
+
+def query_select(query, param):
   with connection.cursor() as cursor:
-    cursor.execute(query)
+    cursor.execute(query, param)
     result = cursor.fetchall()
     return result
   

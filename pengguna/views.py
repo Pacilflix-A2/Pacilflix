@@ -37,7 +37,7 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{username}' AND password='{password}';")
+        result = query_select('SELECT username, asal_negara FROM pengguna WHERE username = %s AND password = %s', (username, password))
         
         if len(result) != 0:
             username = result[0][0]
