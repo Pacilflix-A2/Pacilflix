@@ -113,7 +113,7 @@ def delete_downloaded_item(request):
             id_tayangan = parse(query_select("select id from tayangan where judul = %s", [judul]))
             with connection.cursor() as cursor:
                 print("delete from tayangan_terunduh where id_tayangan = %s and timestamp >= %s and timestamp <= %s", (id_tayangan, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59"))
-                cursor.execute("delete from tayangan_terunduh where id_tayangan = %s and timestamp >= %s and timestamp <= %s and username = '%s", (id_tayangan, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59", get_current_user(request)['username']))
+                cursor.execute("delete from tayangan_terunduh where id_tayangan = %s and timestamp >= %s and timestamp <= %s and username = %s", (id_tayangan, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59", get_current_user(request)['username']))
                 cursor.close()
                 connection.close()
             return JsonResponse({'success': True})
