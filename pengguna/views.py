@@ -18,7 +18,7 @@ def register(request):
         asal_negara = request.POST.get("negara")
         
         try:
-            add_query(f"INSERT INTO pengguna (username, password, asal_negara) VALUES ('{username}', '{password}', '{asal_negara}');")
+            add_query("INSERT INTO pengguna (username, password, asal_negara) VALUES (%s, %s, %s);", (username, password, asal_negara))
             messages.success(request, 'Your account has been successfully created!')
             response = HttpResponseRedirect(reverse("pengguna:login"))
             return response

@@ -18,10 +18,6 @@ BEGIN
             metode_pembayaran = NEW.metode_pembayaran,
             timestamp_pembayaran = NEW.timestamp_pembayaran
         WHERE username = NEW.username AND transaction_id = latest_active_transaction.transaction_id;
-    
-    ELSE
-        INSERT INTO Transaction(username, nama_paket, start_date_time, end_date_time, metode_pembayaran, timestamp_pembayaran)
-        VALUES (NEW.username, NEW.nama_paket, NEW.start_date_time, NEW.end_date_time, NEW.metode_pembayaran, NEW.timestamp_pembayaran);
     END IF;
     
     RETURN NEW;

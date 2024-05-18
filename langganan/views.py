@@ -14,16 +14,16 @@ def kelola(request):
     # dukungan_perangkat = request.session.get('dukungan_perangkat')
 
     with connection.cursor() as cursor:
-        cursor.execute(f"""
+        cursor.execute("""
             SELECT Transaction.nama_paket, Paket.harga, Paket.resolusi_layar, STRING_AGG(DUKUNGAN_PERANGKAT.dukungan_perangkat, ', ') AS devices, Transaction.start_date_time, Transaction.end_date_time, Transaction.metode_pembayaran, Transaction.timestamp_pembayaran
             FROM Transaction
             JOIN Paket ON Transaction.nama_paket = Paket.nama
             JOIN DUKUNGAN_PERANGKAT ON Paket.nama = DUKUNGAN_PERANGKAT.nama_paket
-            WHERE Transaction.username = '{username}' AND Transaction.end_date_time >= CURRENT_DATE
+            WHERE Transaction.username = %s AND Transaction.end_date_time >= CURRENT_DATE
             GROUP BY Transaction.nama_paket, Paket.harga, Paket.resolusi_layar, Transaction.start_date_time, Transaction.end_date_time, Transaction.metode_pembayaran, Transaction.timestamp_pembayaran
             ORDER BY Transaction.start_date_time DESC
             LIMIT 1
-        """)
+        """, [username])
         active_subscription = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': row[3], 'start_date_time': row[4], 'end_date_time': row[5], 'metode_pembayaran': row[6], 'timestamp_pembayaran': row[7]}
                                for row in cursor.fetchall()]
     # active_subscription = query_select(f"""
@@ -62,13 +62,13 @@ def kelola(request):
         available_packages = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': row[3]}
                               for row in cursor.fetchall()]
         
-    transaction_history = query_select(f"""
+    transaction_history = query_select("""
         SELECT T.nama_paket, T.start_date_time, T.end_date_time, T.metode_pembayaran, T.timestamp_pembayaran, P.harga
         FROM Transaction T
         JOIN Paket P ON T.nama_paket = P.nama
-        WHERE T.username = '{username}'
+        WHERE T.username = %s
         ORDER BY T.start_date_time DESC
-    """)
+    """, [username])
 
     transaction_history = [{'nama_paket': row[0], 'start_date_time': row[1], 'end_date_time': row[2], 'metode_pembayaran': row[3], 'timestamp_pembayaran': row[4], 'total_pembayaran': row[5]}
                         for row in transaction_history]
@@ -117,30 +117,30 @@ def process_purchase(request):
         start_date = current_timestamp 
         end_date = start_date + timezone.timedelta(days=30)
 
-        existing_transaction = query_select(f"""
+        existing_transaction = query_select("""
             SELECT timestamp_pembayaran
             FROM Transaction
-            WHERE username = '{username}' AND end_date_time >= CURRENT_DATE
+            WHERE username = %s AND end_date_time >= CURRENT_DATE
             ORDER BY timestamp_pembayaran DESC LIMIT 1
-        """)
+        """, [username])
 
         if existing_transaction:
-            update_query = f"""
+            update_query = """
                 UPDATE Transaction
-                SET end_date_time = '{end_date.isoformat()}',
-                    nama_paket = '{nama_paket}',
-                    metode_pembayaran = '{payment_method}',
-                    timestamp_pembayaran = '{current_timestamp.isoformat()}'
-                WHERE timestamp_pembayaran = '{existing_transaction[0][0]}'
+                SET end_date_time = %s,
+                    nama_paket = %s,
+                    metode_pembayaran = %s,
+                    timestamp_pembayaran = %s
+                WHERE timestamp_pembayaran = %s
             """
-            print(update_query)
+            add_query(update_query, (end_date.isoformat(), nama_paket, payment_method, current_timestamp.isoformat(), existing_transaction[0][0]))
         else:
-            insert_query = f"""
+            insert_query = """
                 INSERT INTO Transaction (username, nama_paket, start_date_time, end_date_time, metode_pembayaran, timestamp_pembayaran)
-                VALUES ('{username}', '{nama_paket}', '{start_date.isoformat()}', '{end_date.isoformat()}', '{payment_method}', '{current_timestamp.isoformat()}')
+                VALUES (%s, %s, %s, %s, %s, %s)
             """
+            add_query(insert_query, (username, nama_paket, start_date.isoformat(), end_date.isoformat(), payment_method, current_timestamp.isoformat()))
         
-        add_query(update_query if existing_transaction else insert_query)
         
         # request.session['dukungan_perangkat'] = dukungan_perangkat
 
