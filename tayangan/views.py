@@ -111,10 +111,14 @@ def detail_tayangan_film(request, film_id):
         ORDER BY timestamp DESC
     """, (film_id,))
 
+    daftar_favorit = query_select("select judul from daftar_favorit where username = %s", [get_current_user(request)['username']])
+    daftar_favorit = [{'judul': row[0]} for row in daftar_favorit]
+
     context = {
         'film': film,
         'film_id': film_id,
         'reviews': reviews,
+        'daftar_favorit' : daftar_favorit
     }
 
     return render(request, 'tayangan/halaman_film.html', context)
@@ -168,11 +172,15 @@ def detail_tayangan_series(request, series_id):
         ORDER BY timestamp DESC
     """, (series_id,))
 
+    daftar_favorit = query_select("select judul from daftar_favorit where username = %s", [get_current_user(request)['username']])
+    daftar_favorit = [{'judul': row[0]} for row in daftar_favorit]
+
     context = {
         'series': series,
         'episodes': episodes,
         'reviews': reviews,
         'series_id': series_id,
+        'daftar_favorit':daftar_favorit
     }
 
     return render(request, 'tayangan/halaman_series.html', context)

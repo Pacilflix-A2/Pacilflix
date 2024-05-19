@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
@@ -7,7 +8,7 @@ from django.http import HttpResponseRedirect
 
 from general.query import *
 from general.auth import *
-from datetime import datetime
+from datetime import datetime, timezone
 
 def datetime_convert(datetime_str):
     list_time = datetime_str.split(" ")
@@ -169,3 +170,43 @@ def delete_favorit_tayangan(request):
             return JsonResponse({'success': False, 'error': str(e).split("\n")[0]})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    
+@csrf_exempt
+def tambah_favorit(request):
+    if request.method == 'POST':
+        favorite_title = request.POST.get('favoriteTitle')
+        judul_tayangan = request.POST.get('judul_film')
+        try:
+            # Assuming you have a user associated with the request
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM tayangan WHERE judul = %s", [judul_tayangan])
+                id_tay = cursor.fetchone()[0]
+                cursor.execute("SELECT timestamp FROM daftar_favorit WHERE judul = %s", [favorite_title])
+                timestamp = cursor.fetchone()[0]
+                cursor.execute("INSERT INTO tayangan_memiliki_daftar_favorit VALUES (%s, %s, %s)", (id_tay, timestamp, get_current_user(request)['username']))
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'success': False})
+    return JsonResponse({'success': False})
+
+
+@csrf_exempt
+def unduh_tayangan(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        judul_film = data.get('judul_film')
+        print(judul_film)
+        current_timestamp = datetime.now() 
+        print(current_timestamp)
+        # Perform any necessary operations here, such as downloading the content
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT id FROM tayangan WHERE judul = %s", [judul_film])
+            id_tay = parse(cursor.fetchall())
+            cursor.execute("insert into tayangan_terunduh values (%s, %s, %s)", (id_tay, get_current_user(request)['username'], current_timestamp.isoformat()))
+        
+        # Example response
+        return JsonResponse({'success': True})
+    
+    # Handle GET requests or other methods
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

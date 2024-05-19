@@ -10,4 +10,6 @@ urlpatterns = [
     path('delete_favorit', delete_favorit_item, name='delete_favorit'),
     path('detail_favorit/<str:judul>/<str:timestamp>/', detail_favorit, name='detail_favorit'),
     path('delete_favorit/', delete_favorit_tayangan, name='delete_favorit_tayangan'),
+    path('tambah-favorit/', tambah_favorit, name='tambah_favorit'),
+    path('unduh-tayangan/', unduh_tayangan, name='unduh_tayangan'),
 ]
