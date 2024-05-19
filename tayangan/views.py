@@ -11,16 +11,19 @@ def tayangan_list(request):
     if not is_authenticated(request):
         return render(request, 'tayangan/404.html')
     
+    username = get_current_user(request)['username']
+    current_time = timezone.now()
+
     search_query = request.GET.get('search', '')
 
     if search_query:
         # Perform the search query
-        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE %s", ('%' + search_query + '%',))
-        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE %s", ('%' + search_query + '%',))
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE %s", ('%' + search_query + '%',))
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE %s", ('%' + search_query + '%',))
     else:
         # Fetch all films and series
-        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)", ())
-        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)", ())
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
 
     # Fetch top 10 tayangan based on total views in the last 7 days
     last_7_days = timezone.now().date() - timedelta(days=7)
@@ -43,11 +46,20 @@ def tayangan_list(request):
         LIMIT 10
     """, (last_7_days,))
 
+    has_active_package = query_select("""
+        SELECT EXISTS (
+            SELECT 1
+            FROM TRANSACTION
+            WHERE username = %s AND end_date_time > %s
+        )
+    """, (username, current_time))[0][0]
+
     context = {
         'films': films,
         'series': series,
         'search_query': search_query,
         'top_tayangan': top_tayangan,
+        'has_active_package': has_active_package,
     }
 
     return render(request, 'tayangan/tayangan.html', context)
@@ -92,9 +104,17 @@ def detail_tayangan_film(request, film_id):
 
     film = film[0]
 
+    reviews = query_select("""
+        SELECT username, rating, deskripsi
+        FROM ulasan
+        WHERE id_tayangan = %s
+        ORDER BY timestamp DESC
+    """, (film_id,))
+
     context = {
         'film': film,
         'film_id': film_id,
+        'reviews': reviews,
     }
 
     return render(request, 'tayangan/halaman_film.html', context)
@@ -141,9 +161,18 @@ def detail_tayangan_series(request, series_id):
         ORDER BY episode.release_date
     """, (series_id,))
 
+    reviews = query_select("""
+        SELECT username, rating, deskripsi
+        FROM ulasan
+        WHERE id_tayangan = %s
+        ORDER BY timestamp DESC
+    """, (series_id,))
+
     context = {
         'series': series,
         'episodes': episodes,
+        'reviews': reviews,
+        'series_id': series_id,
     }
 
     return render(request, 'tayangan/halaman_series.html', context)
@@ -249,3 +278,23 @@ def record_series_watch(request, series_id):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False}, status=400)
+
+@csrf_exempt
+def submit_review(request, tayangan_id):
+    if request.method == 'POST':
+        username = get_current_user(request)['username']
+        deskripsi = request.POST.get('deskripsi')
+        rating = request.POST.get('rating')
+
+        try:
+            query = """
+                INSERT INTO ulasan (id_tayangan, username, timestamp, rating, deskripsi)
+                VALUES (%s, %s, NOW(), %s, %s)
+            """
+            params = (tayangan_id, username, rating, deskripsi)
+            add_query(query, params)
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
