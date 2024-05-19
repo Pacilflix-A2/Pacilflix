@@ -92,9 +92,17 @@ def detail_tayangan_film(request, film_id):
 
     film = film[0]
 
+    reviews = query_select("""
+        SELECT username, rating, deskripsi
+        FROM ulasan
+        WHERE id_tayangan = %s
+        ORDER BY timestamp DESC
+    """, (film_id,))
+
     context = {
         'film': film,
         'film_id': film_id,
+        'reviews': reviews,
     }
 
     return render(request, 'tayangan/halaman_film.html', context)
@@ -141,9 +149,18 @@ def detail_tayangan_series(request, series_id):
         ORDER BY episode.release_date
     """, (series_id,))
 
+    reviews = query_select("""
+        SELECT username, rating, deskripsi
+        FROM ulasan
+        WHERE id_tayangan = %s
+        ORDER BY timestamp DESC
+    """, (series_id,))
+
     context = {
         'series': series,
         'episodes': episodes,
+        'reviews': reviews,
+        'series_id': series_id,
     }
 
     return render(request, 'tayangan/halaman_series.html', context)
@@ -249,3 +266,23 @@ def record_series_watch(request, series_id):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False}, status=400)
+
+@csrf_exempt
+def submit_review(request, tayangan_id):
+    if request.method == 'POST':
+        username = get_current_user(request)['username']
+        deskripsi = request.POST.get('deskripsi')
+        rating = request.POST.get('rating')
+
+        try:
+            query = """
+                INSERT INTO ulasan (id_tayangan, username, timestamp, rating, deskripsi)
+                VALUES (%s, %s, NOW(), %s, %s)
+            """
+            params = (tayangan_id, username, rating, deskripsi)
+            add_query(query, params)
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
