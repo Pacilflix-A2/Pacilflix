@@ -15,16 +15,16 @@ def tayangan_list(request):
 
     if search_query:
         # Perform the search query
-        films = query_select(f"SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE '%{search_query}%'")
-        series = query_select(f"SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE '%{search_query}%'")
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE %s", ('%' + search_query + '%',))
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE %s", ('%' + search_query + '%',))
     else:
         # Fetch all films and series
-        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)")
-        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)")
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)", ())
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
 
     # Fetch top 10 tayangan based on total views in the last 7 days
     last_7_days = timezone.now().date() - timedelta(days=7)
-    top_tayangan = query_select(f"""
+    top_tayangan = query_select("""
         SELECT 
             tayangan.id, 
             tayangan.judul, 
@@ -37,12 +37,11 @@ def tayangan_list(request):
                 WHEN EXISTS (SELECT 1 FROM series WHERE series.id_tayangan = tayangan.id) THEN 'series'
             END AS type
         FROM tayangan
-        LEFT JOIN riwayat_nonton ON tayangan.id = riwayat_nonton.id_tayangan AND riwayat_nonton.start_date_time >= '{last_7_days}'
+        LEFT JOIN riwayat_nonton ON tayangan.id = riwayat_nonton.id_tayangan AND riwayat_nonton.start_date_time >= %s
         GROUP BY tayangan.id
         ORDER BY total_views DESC
         LIMIT 10
-    """)
-
+    """, (last_7_days,))
 
     context = {
         'films': films,
@@ -53,21 +52,11 @@ def tayangan_list(request):
 
     return render(request, 'tayangan/tayangan.html', context)
 
-def hasil_pencarian(request):
-    # Add logic to fetch search results from the database
-    # For now, you can use dummy data
-    search_results = [
-        {'judul': 'Tayangan 1', 'sinopsis': 'Sinopsis tayangan 1', 'url': 'https://example.com/tayangan1', 'tanggal_rilis': '2023-06-01'},
-        {'judul': 'Tayangan 2', 'sinopsis': 'Sinopsis tayangan 2', 'url': 'https://example.com/tayangan2', 'tanggal_rilis': '2023-06-02'},
-    ]
-
-    return render(request, 'tayangan/hasil_pencarian.html', {'search_results': search_results})
-
 def detail_tayangan_film(request, film_id):
     if not is_authenticated(request):
         return render(request, 'tayangan/404.html')
 
-    film = query_select(f"""
+    film = query_select("""
         SELECT 
             tayangan.judul, 
             tayangan.sinopsis, 
@@ -75,17 +64,17 @@ def detail_tayangan_film(request, film_id):
             film.url_video_film, 
             film.release_date_film, 
             film.durasi_film,
-            (SELECT COUNT(*) FROM riwayat_nonton WHERE id_tayangan = '{film_id}') AS total_view,
-            (SELECT AVG(rating) FROM ulasan WHERE id_tayangan = '{film_id}') AS rating_rata_rata,
-            (SELECT STRING_AGG(genre, ', ') FROM genre_tayangan WHERE id_tayangan = '{film_id}') AS genre,
+            (SELECT COUNT(*) FROM riwayat_nonton WHERE id_tayangan = %s) AS total_view,
+            (SELECT AVG(rating) FROM ulasan WHERE id_tayangan = %s) AS rating_rata_rata,
+            (SELECT STRING_AGG(genre, ', ') FROM genre_tayangan WHERE id_tayangan = %s) AS genre,
             (SELECT STRING_AGG(contributors.nama, ', ') FROM pemain 
                 INNER JOIN contributors ON pemain.id = contributors.id
                 INNER JOIN memainkan_tayangan ON pemain.id = memainkan_tayangan.id_pemain
-                WHERE memainkan_tayangan.id_tayangan = '{film_id}') AS pemain,
+                WHERE memainkan_tayangan.id_tayangan = %s) AS pemain,
             (SELECT STRING_AGG(contributors.nama, ', ') FROM penulis_skenario
                 INNER JOIN contributors ON penulis_skenario.id = contributors.id
                 INNER JOIN menulis_skenario_tayangan ON penulis_skenario.id = menulis_skenario_tayangan.id_penulis_skenario
-                WHERE menulis_skenario_tayangan.id_tayangan = '{film_id}') AS penulis_skenario,
+                WHERE menulis_skenario_tayangan.id_tayangan = %s) AS penulis_skenario,
             (SELECT contributors.nama FROM sutradara
                 INNER JOIN contributors ON sutradara.id = contributors.id
                 WHERE sutradara.id = tayangan.id_sutradara) AS sutradara,
@@ -95,8 +84,8 @@ def detail_tayangan_film(request, film_id):
             END AS release_status
         FROM tayangan
         INNER JOIN film ON tayangan.id = film.id_tayangan
-        WHERE tayangan.id = '{film_id}'
-    """)
+        WHERE tayangan.id = %s
+    """, (film_id, film_id, film_id, film_id, film_id, film_id))
 
     if not film:
         return render(request, 'tayangan/404.html')
@@ -114,43 +103,43 @@ def detail_tayangan_series(request, series_id):
     if not is_authenticated(request):
         return render(request, 'tayangan/404.html')
 
-    series = query_select(f"""
+    series = query_select("""
         SELECT 
             tayangan.judul, 
             tayangan.sinopsis, 
             tayangan.asal_negara, 
-            (SELECT COUNT(*) FROM riwayat_nonton WHERE id_tayangan = '{series_id}') AS total_view,
-            (SELECT AVG(rating) FROM ulasan WHERE id_tayangan = '{series_id}') AS rating_rata_rata,
-            (SELECT STRING_AGG(genre, ', ') FROM genre_tayangan WHERE id_tayangan = '{series_id}') AS genre,
+            (SELECT COUNT(*) FROM riwayat_nonton WHERE id_tayangan = %s) AS total_view,
+            (SELECT AVG(rating) FROM ulasan WHERE id_tayangan = %s) AS rating_rata_rata,
+            (SELECT STRING_AGG(genre, ', ') FROM genre_tayangan WHERE id_tayangan = %s) AS genre,
             (SELECT STRING_AGG(contributors.nama, ', ') FROM pemain 
                 INNER JOIN contributors ON pemain.id = contributors.id
                 INNER JOIN memainkan_tayangan ON pemain.id = memainkan_tayangan.id_pemain
-                WHERE memainkan_tayangan.id_tayangan = '{series_id}') AS pemain,
+                WHERE memainkan_tayangan.id_tayangan = %s) AS pemain,
             (SELECT STRING_AGG(contributors.nama, ', ') FROM penulis_skenario
                 INNER JOIN contributors ON penulis_skenario.id = contributors.id
                 INNER JOIN menulis_skenario_tayangan ON penulis_skenario.id = menulis_skenario_tayangan.id_penulis_skenario
-                WHERE menulis_skenario_tayangan.id_tayangan = '{series_id}') AS penulis_skenario,
+                WHERE menulis_skenario_tayangan.id_tayangan = %s) AS penulis_skenario,
             (SELECT contributors.nama FROM sutradara
                 INNER JOIN contributors ON sutradara.id = contributors.id
                 WHERE sutradara.id = tayangan.id_sutradara) AS sutradara
         FROM tayangan
         INNER JOIN series ON tayangan.id = series.id_tayangan
-        WHERE tayangan.id = '{series_id}'
-    """)
+        WHERE tayangan.id = %s
+    """, (series_id, series_id, series_id, series_id, series_id, series_id))
 
     if not series:
         return render(request, 'tayangan/404.html')
 
     series = series[0]
 
-    episodes = query_select(f"""
+    episodes = query_select("""
         SELECT 
             episode.sub_judul,
             episode.id_series
         FROM episode
-        WHERE episode.id_series = '{series_id}'
+        WHERE episode.id_series = %s
         ORDER BY episode.release_date
-    """)
+    """, (series_id,))
 
     context = {
         'series': series,
@@ -165,7 +154,7 @@ def detail_tayangan_episode(request, episode_id):
     
     sub_judul = request.GET.get('sub_judul')
 
-    episode = query_select(f"""
+    episode = query_select("""
         SELECT
             tayangan.judul,
             episode.sub_judul,
@@ -180,22 +169,22 @@ def detail_tayangan_episode(request, episode_id):
         FROM episode
         INNER JOIN series ON episode.id_series = series.id_tayangan
         INNER JOIN tayangan ON series.id_tayangan = tayangan.id
-        WHERE episode.id_series = '{episode_id}' AND episode.sub_judul = '{sub_judul}'
-    """)
+        WHERE episode.id_series = %s AND episode.sub_judul = %s
+    """, (episode_id, sub_judul))
 
     if not episode:
         return render(request, 'tayangan/404.html')
 
     episode = episode[0]
 
-    other_episodes = query_select(f"""
+    other_episodes = query_select("""
         SELECT
             episode.sub_judul,
             episode.id_series
         FROM episode
-        WHERE episode.id_series = '{episode_id}' AND episode.sub_judul != '{sub_judul}'
+        WHERE episode.id_series = %s AND episode.sub_judul != %s
         ORDER BY episode.release_date
-    """)
+    """, (episode_id, sub_judul))
 
     context = {
         'episode': episode,
@@ -211,23 +200,23 @@ def record_film_watch(request, film_id):
         username = get_current_user(request)['username']
 
         # Get the film's duration
-        film_duration = query_select(f"""
+        film_duration = query_select("""
             SELECT durasi_film
             FROM film
-            WHERE id_tayangan = '{film_id}'
-        """)[0][0]
+            WHERE id_tayangan = %s
+        """, (film_id,))[0][0]
 
         # Calculate the start_date_time based on the end_date_time and film's duration
-        query = f"""
+        query = """
             INSERT INTO RIWAYAT_NONTON (id_tayangan, username, start_date_time, end_date_time)
             VALUES (
-                '{film_id}',
-                '{username}',
-                NOW() - INTERVAL '{film_duration} minutes',
+                %s,
+                %s,
+                NOW() - INTERVAL '%s minutes',
                 NOW()
             )
         """
-        add_query(query)
+        add_query(query, (film_id, username, film_duration))
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False}, status=400)
@@ -238,25 +227,25 @@ def record_series_watch(request, series_id):
         username = get_current_user(request)['username']
 
         # Get the episode's duration
-        episode_duration = query_select(f"""
+        episode_duration = query_select("""
             SELECT durasi
             FROM episode
-            WHERE id_series = '{series_id}'
+            WHERE id_series = %s
             ORDER BY release_date DESC
             LIMIT 1
-        """)[0][0]
+        """, (series_id,))[0][0]
 
         # Calculate the start_date_time based on the end_date_time and episode's duration
-        query = f"""
+        query = """
             INSERT INTO RIWAYAT_NONTON (id_tayangan, username, start_date_time, end_date_time)
             VALUES (
-                '{series_id}',
-                '{username}',
-                NOW() - INTERVAL '{episode_duration} minutes',
+                %s,
+                %s,
+                NOW() - INTERVAL '%s minutes',
                 NOW()
             )
         """
-        add_query(query)
+        add_query(query, (series_id, username, episode_duration))
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False}, status=400)

@@ -1,13 +1,9 @@
-from django.http import JsonResponse
 from django.shortcuts import render
-from django.db import connection
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseRedirect
 
 from general.query import *
 from general.auth import *
 from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime
 
 # Create your views here.
 def trailer(request):
@@ -23,7 +19,8 @@ def trailer(request):
         series = query_select("SELECT judul, sinopsis, url_video_trailer, release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
 
     # Fetch top 10 tayangan based on total views in the last 7 days
-    last_7_days = timezone.now().date() - timedelta(days=7)
+    last_7_days = timezone.now().date()
+    last_7_days_datetime = datetime.combine(last_7_days, datetime.min.time())
     top_tayangan = query_select("""
         SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer, COUNT(riwayat_nonton.id_tayangan) AS total_views
         FROM tayangan
@@ -31,30 +28,12 @@ def trailer(request):
         GROUP BY tayangan.id
         ORDER BY total_views DESC
         LIMIT 10
-    """, (last_7_days))
+    """, (last_7_days_datetime))
 
     context = {
         'films': films,
         'series': series,
         'search_query': search_query,
-        'top_tayangan': top_tayangan,
-    }
-
-    return render(request, 'trailer/trailer.html', context)
-
-def trailer_test(request):
-    # for testing purposes only
-    top_tayangan = [
-        (1, 'Tayangan 1', 'Sinopsis 1', 'URL 1', '2023-05-17', 100),
-        (2, 'Tayangan 2', 'Sinopsis 2', 'URL 2', '2023-05-16', 80),
-        (3, 'Tayangan 3', 'Sinopsis 3', 'URL 3', '2023-05-15', 60),
-        (4, 'Tayangan 4', 'Sinopsis 4', 'URL 4', '2023-05-19', 70),
-    ]
-
-    context = {
-        'films': [],
-        'series': [],
-        'search_query': '',
         'top_tayangan': top_tayangan,
     }
 
