@@ -65,6 +65,7 @@
                 </td>
                 <td class="py-2 px-4">{{ tayangan.4 }}</td>
                 <td class="py-2 px-4">{{ tayangan.5 }}</td>
+                {% if has_active_package %}
                 <td class="py-2 px-4">
                   {% if tayangan.6 == 'film' %}
                   <a
@@ -82,6 +83,16 @@
                   </a>
                   {% endif %}
                 </td>
+                {% else %}
+                <td class="py-2 px-4">
+                  <button
+                    class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Belum Berlangganan
+                  </button>
+                </td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>
@@ -107,7 +118,7 @@
             <thead>
               <tr class="bg-[#EFB177] text-black">
                 <th class="py-2 px-4">Judul Film</th>
-                <th class="py-2 px-4">Sinopsis</th>
+                <th class="py-2 px-4">Sinopsis Trailer</th>
                 <th class="py-2 px-4">URL Trailer</th>
                 <th class="py-2 px-4">Tanggal Rilis</th>
                 <th class="py-2 px-4"></th>
@@ -127,12 +138,21 @@
                 </td>
                 <td class="py-2 px-4">{{ film.4 }}</td>
                 <td class="py-2 px-4">
+                  {% if has_active_package %}
                   <a
                     href="{% url 'detail_tayangan_film' film.0 %}"
                     class="bg-[#DF8931] text-white px-4 py-2 rounded hover:bg-[#F4BA7E] active:bg-[#DF8931]"
                   >
                     Tonton
                   </a>
+                  {% else %}
+                  <button
+                    class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Belum Berlangganan
+                  </button>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}
@@ -151,7 +171,7 @@
             <thead>
               <tr class="bg-[#EFB177] text-black">
                 <th class="py-2 px-4">Judul Series</th>
-                <th class="py-2 px-4">Sinopsis</th>
+                <th class="py-2 px-4">Sinopsis Trailer</th>
                 <th class="py-2 px-4">URL Trailer</th>
                 <th class="py-2 px-4">Tanggal Rilis</th>
                 <th class="py-2 px-4"></th>
@@ -171,12 +191,21 @@
                 </td>
                 <td class="py-2 px-4">{{ series.4 }}</td>
                 <td class="py-2 px-4">
+                  {% if has_active_package %}
                   <a
                     href="{% url 'detail_tayangan_series' series.0 %}"
                     class="bg-[#DF8931] text-white px-4 py-2 rounded hover:bg-[#F4BA7E] active:bg-[#DF8931]"
                   >
                     Tonton
                   </a>
+                  {% else %}
+                  <button
+                    class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Belum Berlangganan
+                  </button>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}

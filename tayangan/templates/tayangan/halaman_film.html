@@ -17,11 +17,7 @@
       </h2>
     </div>
     <!-- Slider -->
-    <div
-      class="flex flex-col items-center py-5 gap-3"
-      id="slider-container"
-      style="display: none"
-    >
+    <div class="flex flex-col items-center py-5 gap-3" id="slider-container">
       <input
         id="progress-slider"
         type="range"
@@ -63,14 +59,9 @@
     <!-- Script for Slider and Button -->
     <script>
       const tontonButton = document.getElementById("tonton-button");
-      const sliderContainer = document.getElementById("slider-container");
       const progressSlider = document.getElementById("progress-slider");
 
       tontonButton.addEventListener("click", function () {
-        sliderContainer.style.display = "flex";
-      });
-
-      progressSlider.addEventListener("input", function () {
         const percentage = progressSlider.value;
         if (percentage >= 70) {
           // Send an AJAX request to the server to record the watch progress
@@ -86,6 +77,8 @@
                 alert("Film watched successfully!");
               }
             });
+        } else {
+          alert("Please watch at least 70% of the film to mark it as watched.");
         }
       });
     </script>

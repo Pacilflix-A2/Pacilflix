@@ -11,16 +11,19 @@ def tayangan_list(request):
     if not is_authenticated(request):
         return render(request, 'tayangan/404.html')
     
+    username = get_current_user(request)['username']
+    current_time = timezone.now()
+
     search_query = request.GET.get('search', '')
 
     if search_query:
         # Perform the search query
-        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE %s", ('%' + search_query + '%',))
-        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE %s", ('%' + search_query + '%',))
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film) AND judul ILIKE %s", ('%' + search_query + '%',))
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series) AND judul ILIKE %s", ('%' + search_query + '%',))
     else:
         # Fetch all films and series
-        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)", ())
-        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
+        films = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM film)", ())
+        series = query_select("SELECT tayangan.id, tayangan.judul, tayangan.sinopsis_trailer, tayangan.url_video_trailer, tayangan.release_date_trailer FROM tayangan WHERE id IN (SELECT id_tayangan FROM series)", ())
 
     # Fetch top 10 tayangan based on total views in the last 7 days
     last_7_days = timezone.now().date() - timedelta(days=7)
@@ -43,11 +46,20 @@ def tayangan_list(request):
         LIMIT 10
     """, (last_7_days,))
 
+    has_active_package = query_select("""
+        SELECT EXISTS (
+            SELECT 1
+            FROM TRANSACTION
+            WHERE username = %s AND end_date_time > %s
+        )
+    """, (username, current_time))[0][0]
+
     context = {
         'films': films,
         'series': series,
         'search_query': search_query,
         'top_tayangan': top_tayangan,
+        'has_active_package': has_active_package,
     }
 
     return render(request, 'tayangan/tayangan.html', context)
