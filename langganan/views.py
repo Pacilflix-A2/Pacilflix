@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime, timedelta
 
 from general.query import *
 from general.auth import *
@@ -11,8 +12,7 @@ def kelola(request):
     if not is_authenticated(request):
         return render(request, '404.html')
     username = get_current_user(request)['username']
-    # dukungan_perangkat = request.session.get('dukungan_perangkat')
-
+    
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT Transaction.nama_paket, Paket.harga, Paket.resolusi_layar, STRING_AGG(DUKUNGAN_PERANGKAT.dukungan_perangkat, ', ') AS devices, Transaction.start_date_time, Transaction.end_date_time, Transaction.metode_pembayaran, Transaction.timestamp_pembayaran
@@ -26,29 +26,6 @@ def kelola(request):
         """, [username])
         active_subscription = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': row[3], 'start_date_time': row[4], 'end_date_time': row[5], 'metode_pembayaran': row[6], 'timestamp_pembayaran': row[7]}
                                for row in cursor.fetchall()]
-    # active_subscription = query_select(f"""
-    #     SELECT Transaction.nama_paket, Paket.harga, Paket.resolusi_layar, DUKUNGAN_PERANGKAT.dukungan_perangkat, Transaction.start_date_time, Transaction.end_date_time, Transaction.metode_pembayaran, Transaction.timestamp_pembayaran
-    #     FROM Transaction
-    #     JOIN Paket ON Transaction.nama_paket = Paket.nama
-    #     JOIN DUKUNGAN_PERANGKAT ON Paket.nama = DUKUNGAN_PERANGKAT.nama_paket
-    #     WHERE Transaction.username = '{username}' AND Transaction.end_date_time >= CURRENT_DATE
-    #     ORDER BY Transaction.start_date_time DESC
-    #     LIMIT 1
-    # """)
-
-    # active_subscription = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': dukungan_perangkat, 'start_date_time': row[4], 'end_date_time': row[5], 'metode_pembayaran': row[6], 'timestamp_pembayaran': row[7]}
-    #                     for row in active_subscription]
-
-
-    # available_packages = query_select("""
-    #     SELECT Paket.nama, Paket.harga, Paket.resolusi_layar, STRING_AGG(DUKUNGAN_PERANGKAT.dukungan_perangkat, ', ') AS dukungan_perangkat
-    #     FROM Paket
-    #     JOIN DUKUNGAN_PERANGKAT ON Paket.nama = DUKUNGAN_PERANGKAT.nama_paket
-    #     GROUP BY Paket.nama, Paket.harga, Paket.resolusi_layar
-    # """)
-
-    # available_packages = [{'nama': row[0], 'harga': row[1], 'resolusi_layar': row[2], 'dukungan_perangkat': row[3]}
-    #                       for row in available_packages]
 
     with connection.cursor() as cursor:
         cursor.execute("""
@@ -113,8 +90,8 @@ def process_purchase(request):
         dukungan_perangkat = request.POST.get('dukungan_perangkat')
         payment_method = request.POST.get('payment_method')
 
-        current_timestamp = timezone.now() 
-        start_date = current_timestamp 
+        current_timestamp = datetime.now() 
+        start_date = current_timestamp + timezone.timedelta(hours=7)
         end_date = start_date + timezone.timedelta(days=30)
 
         existing_transaction = query_select("""
@@ -140,9 +117,6 @@ def process_purchase(request):
                 VALUES (%s, %s, %s, %s, %s, %s)
             """
             add_query(insert_query, (username, nama_paket, start_date.isoformat(), end_date.isoformat(), payment_method, current_timestamp.isoformat()))
-        
-        
-        # request.session['dukungan_perangkat'] = dukungan_perangkat
 
         return redirect('kelola')
 
