@@ -116,6 +116,8 @@ def process_purchase(request):
         current_timestamp = timezone.now() 
         start_date = current_timestamp 
         end_date = start_date + timezone.timedelta(days=30)
+        start_date = start_date + timezone.timedelta(hours=7)
+        end_date = end_date + timezone.timedelta(hours=7)
 
         existing_transaction = query_select("""
             SELECT timestamp_pembayaran
