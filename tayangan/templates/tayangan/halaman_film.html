@@ -1,4 +1,5 @@
 {% extends 'base-temp.html' %} {% block content %}
+
 <div class="w-screen" style="margin: -24px 0 0">
   <h1
     class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
@@ -8,16 +9,47 @@
   <div class="container">
     <!-- Title & Genre -->
     <div class="my-5 ml-5">
-      <h1 class="text-5xl underline">Gran Turismo</h1>
-      <h2 class="text-xl">Action, Drama, Sci-fi</h2>
+      <h1 class="text-5xl">
+        Judul Film: <span class="font-bold">{{ film.0 }}</span>
+      </h1>
+      <h2 class="text-xl">
+        Genre: <span class="font-semibold">{{ film.8 }}</span>
+      </h2>
     </div>
+    <!-- Slider -->
+    <div
+      class="flex flex-col items-center py-5 gap-3"
+      id="slider-container"
+      style="display: none"
+    >
+      <input
+        id="progress-slider"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        class="w-fit mx-auto"
+      />
+    </div>
+
     <!-- Buttons -->
-    <div class="containe flex flex-row mt-3">
+    <div class="flex flex-row justify-center mt-3">
+      {% if film.12 == 'released' %}
       <button
+        id="tonton-button"
         class="bg-[#DF8931] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#F4BA7E] active:bg-[#DF8931]"
       >
-        Tonton Sekarang</button
-      ><button
+        Tonton Sekarang
+      </button>
+      {% else %}
+      <button
+        class="bg-gray-400 text-white px-4 py-2 mx-2 rounded-3xl cursor-not-allowed"
+        disabled
+      >
+        Film Belum Dirilis
+      </button>
+      {% endif %}
+      <button
         class="bg-[#FFD874] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#FFEDBF] active:bg-[#FFD874]"
       >
         Unduh Tayangan</button
@@ -27,27 +59,55 @@
         Tambah ke Favorit
       </button>
     </div>
-    <!-- Description & Poster -->
+
+    <!-- Script for Slider and Button -->
+    <script>
+      const tontonButton = document.getElementById("tonton-button");
+      const sliderContainer = document.getElementById("slider-container");
+      const progressSlider = document.getElementById("progress-slider");
+
+      tontonButton.addEventListener("click", function () {
+        sliderContainer.style.display = "flex";
+      });
+
+      progressSlider.addEventListener("input", function () {
+        const percentage = progressSlider.value;
+        if (percentage >= 70) {
+          // Send an AJAX request to the server to record the watch progress
+          fetch("/tayangan/film/{{ film_id }}/watch/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                alert("Film watched successfully!");
+              }
+            });
+        }
+      });
+    </script>
+
+    <!-- Description -->
     <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
       <div class="">
         <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
           Deskripsi Tayangan:
         </h1>
         <p class="text-black text-lg ml-3 py-5">
-          Total View: 12345 <br />
-          Rating Rata-Rata: 9/10 <br />
-          Sinopsis: Lorem ipsum <br />
-          Durasi Film: 2 Jam <br />
-          Tanggal Rilis Film: 10/10/2020 <br />
-          URL Film: https://..... <br />
-          Asal Negara: Uzbekistan <br />
-          Pemain: Andi, Budi& <br />
-          Penulis Skenario: Jamal, Agung<br />
-          Sutradara: Mikail
+          Total View: {{ film.6 }} <br />
+          Rating Rata-Rata: {{ film.7 }} <br />
+          Sinopsis: {{ film.1 }} <br />
+          Durasi Film: {{ film.5 }} Menit <br />
+          Tanggal Rilis Film: {{ film.4 }} <br />
+          URL Film: <a href="{{ film.3 }}">{{ film.3 }}</a> <br />
+          Asal Negara: {{ film.2 }} <br />
+          Pemain: {{ film.9 }} <br />
+          Penulis Skenario: {{ film.10 }}<br />
+          Sutradara: {{ film.11 }}
         </p>
-      </div>
-      <div class="h-96 w-48 bg-gray-700 ml-auto self-center mr-10 flex">
-        <p class="self-center mx-auto">Poster</p>
       </div>
     </div>
     <!-- Ulasan -->
