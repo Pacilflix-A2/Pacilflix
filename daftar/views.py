@@ -84,7 +84,7 @@ def daftar_favorit(request):
     if not is_authenticated(request):
         return render(request, '404.html')
     nama = get_current_user(request)['username']
-    fetch_data = query_select(f"select judul, timestamp from daftar_favorit where username = '{nama}'")
+    fetch_data = query_select("select judul, timestamp from daftar_favorit where username = %s", [nama])
     daftar_favorit = [{'judul': row[0], 'timestamp': row[1]} for row in fetch_data]
     context = {
         'daftar_favorit': daftar_favorit,
@@ -96,8 +96,8 @@ def daftar_unduhan(request):
     if not is_authenticated(request):
         return render(request, '404.html')
     nama = get_current_user(request)['username']
-    fetch_data = query_select(f"select id_tayangan, timestamp from tayangan_terunduh where username = '{nama}'")
-    daftar_unduhan = [{'judul': parse(query_select(f"select judul from tayangan where id = '{row[0]}'")), 'timestamp': row[1]} for row in fetch_data]
+    fetch_data = query_select("select id_tayangan, timestamp from tayangan_terunduh where username = %s", [nama])
+    daftar_unduhan = [{'judul': parse(query_select("select judul from tayangan where id = %s", [row[0]])), 'timestamp': row[1]} for row in fetch_data]
     context = {
         'daftar_unduhan': daftar_unduhan,
     }
@@ -110,10 +110,10 @@ def delete_downloaded_item(request):
         timestamp = request.POST.get('timestamp')
 
         try:
-            id_tayangan = parse(query_select(f"select id from tayangan where judul = '{judul}'"))
+            id_tayangan = parse(query_select("select id from tayangan where judul = %s", [judul]))
             with connection.cursor() as cursor:
-                print(f"delete from tayangan_terunduh where id_tayangan = '{id_tayangan}' and timestamp >= '{datetime_convert(timestamp)}00' and timestamp <= '{datetime_convert(timestamp)}59'")
-                cursor.execute(f"delete from tayangan_terunduh where id_tayangan = '{id_tayangan}' and timestamp >= '{datetime_convert(timestamp)}00' and timestamp <= '{datetime_convert(timestamp)}59' and username = '{get_current_user(request)['username']}'")
+                print("delete from tayangan_terunduh where id_tayangan = %s and timestamp >= %s and timestamp <= %s", (id_tayangan, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59"))
+                cursor.execute("delete from tayangan_terunduh where id_tayangan = %s and timestamp >= %s and timestamp <= %s and username = %s", (id_tayangan, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59", get_current_user(request)['username']))
                 cursor.close()
                 connection.close()
             return JsonResponse({'success': True})
@@ -131,8 +131,8 @@ def delete_favorit_item(request):
         try:
             with connection.cursor() as cursor:
                 print(f"delete from daftar_favorit where judul = '{judul}' and timestamp >= '{datetime_convert(timestamp)}00' and timestamp <= '{datetime_convert(timestamp)}59'")
-                cursor.execute(f"delete from daftar_favorit where judul = '{judul}' and timestamp >= '{datetime_convert(timestamp)}00' and timestamp <= '{datetime_convert(timestamp)}59' and username = '{get_current_user(request)['username']}'")
-                cursor.close()
+                cursor.execute("delete from daftar_favorit where judul = %s and timestamp >= %s and timestamp <= %s and username = %s", (judul, f"{datetime_convert(timestamp)}00", f"{datetime_convert(timestamp)}59", get_current_user(request)['username']))
+                cursor.close() 
                 connection.close()
             return JsonResponse({'success': True})
         except Exception as e:
@@ -144,8 +144,8 @@ def detail_favorit(request, judul, timestamp):
     if not is_authenticated(request):
         return render(request, '404.html')
     nama = get_current_user(request)['username']
-    fetch_data = query_select(f"select id_tayangan from tayangan_memiliki_daftar_favorit where username = '{nama}' and  timestamp = '{timestamp}'")
-    daftar_tayangan = [{'judul': parse(query_select(f"select judul from tayangan where id = '{row[0]}'"))} for row in fetch_data]
+    fetch_data = query_select("select id_tayangan from tayangan_memiliki_daftar_favorit where username = %s and  timestamp = %s", (nama, timestamp))
+    daftar_tayangan = [{'judul': parse(query_select("select judul from tayangan where id = %s", [row[0]]))} for row in fetch_data]
     context = {
         'judul' : judul,
         'timestamp' : timestamp,
@@ -159,9 +159,9 @@ def delete_favorit_tayangan(request):
         judul = request.GET.get('judul')
         timestamp = request.GET.get('timestamp')
         try:
-            id_tayangan = parse(query_select(f"select id from tayangan where judul = '{judul}'"))
+            id_tayangan = parse(query_select("select id from tayangan where judul = %s", [judul]))
             with connection.cursor() as cursor:
-                cursor.execute(f"delete from tayangan_memiliki_daftar_favorit where id_tayangan = '{id_tayangan}' and timestamp = '{timestamp}' and username = '{get_current_user(request)['username']}'")
+                cursor.execute("delete from tayangan_memiliki_daftar_favorit where id_tayangan = %s and timestamp = %s and username = %s", (id_tayangan, timestamp, get_current_user(request)['username']))
                 cursor.close()
                 connection.close()
             return JsonResponse({'success': True})

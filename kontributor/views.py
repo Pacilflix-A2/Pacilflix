@@ -17,6 +17,7 @@ def kontributor(request):
             FROM contributors c
             JOIN {role_filter} r ON c.id = r.id
         """
+        rows = query_select(sql_query, ())
     else:
         sql_query = """
             SELECT c.id, c.nama, c.jenis_kelamin, c.kewarganegaraan, 
@@ -30,7 +31,8 @@ def kontributor(request):
             LEFT JOIN pemain p ON c.id = p.id
             LEFT JOIN penulis_skenario ps ON c.id = ps.id
         """
-    rows = query_select(sql_query)
+        rows = query_select(sql_query, ())
+    
 
     contributors = [{
         'id': row[0],

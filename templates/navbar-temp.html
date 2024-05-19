@@ -1,0 +1,109 @@
+{% load static %}
+<style>
+  .navbarcustom {
+    backdrop-filter: blur(2px); /* Apply a blur effect */
+    width: 100vw;
+    top: 0px;
+    position: fixed;
+    padding: 8px 16px; /* Adjust padding */
+    height: 56px; /* Set a fixed height */
+  }
+</style>
+
+<body>
+  <nav class="navbarcustom flex justify-between items-center bg-[#f7cdb15f]">
+    <div class="flex flex-row items-center gap-4">
+      <a class="flex flex-col items-center" href="{% url 'main:show_main' %}">
+        <img class="w-10" src="{% static 'images/logo.png' %}" alt="Logo" />
+        <img class="w-10 ml-2" src="{% static 'images/nama.png' %}" alt="Nama" />
+      </a>
+      {% if request.COOKIES.is_authenticated %}
+      <p class="text-[#EA7F4D] text-xl font-bold">
+        {{ request.COOKIES.username }}
+      </p>
+      {% endif %}
+    </div>
+
+
+    <!-- <button
+      class="block lg:hidden p-2 rounded bg-orange-200"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button> -->
+
+    <div
+      class="flex items-center w-auto z-50"
+    >
+      <ul class="flex flex-row lg:flex-row lg:ml-auto  text-xs">
+        {% if request.COOKIES.is_authenticated %}
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 font-bold p-2 hover:text-red-900"
+            href="{% url 'tayangan_list' %}"
+            >Daftar Tayangan</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'kontributor' %}"
+            >Daftar Kontributor</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'daftar:daftar_favorit' %}"
+            >Kelola Daftar Favorit</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'daftar:daftar_unduhan' %}"
+            >Kelola Daftar Unduhan</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'kelola' %}"
+            >Kelola Langganan</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#B2341C] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'pengguna:logout' %}"
+            >Logout</a
+          >
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#EA7F4D] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'trailer' %}"
+            >Trailer Tayangan</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-[#B2341C] bg-opacity-20 bg-orange-100 font-bold p-2 hover:text-red-900"
+            href="{% url 'pengguna:login' %}"
+            >Log In</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+</body>
+
+
+</html>

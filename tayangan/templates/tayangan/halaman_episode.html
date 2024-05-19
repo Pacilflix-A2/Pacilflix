@@ -3,57 +3,109 @@
   <h1
     class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
   >
-    Halaman Film
+    Halaman Episode
   </h1>
   <div class="container">
     <!-- Title & Genre -->
     <div class="mt-5 ml-5">
-      <h1 class="text-5xl underline">Solo Leveling</h1>
-      <h2 class="text-xl">Episode 1: Introduction</h2>
+      <h1 class="text-5xl">
+        Judul Series: <span class="font-bold">{{ episode.0 }}</span>
+      </h1>
+      <h2 class="text-xl">Sub-judul / Episode: {{ episode.1 }}</h2>
     </div>
-    <!-- Episodes -->
+    <!-- Other Episodes -->
     <div class="ml-5 mt-2 w-fit">
       <h1 class="text-xl font-bold underline">Episode lainnya:</h1>
       <ul class="list-disc ml-8">
-        <a href="">
-          <li class="">
-            <p class="text-gray-800 text-lg font-normal">
-              Episode 2: The End of the Beginning
-            </p>
-          </li></a
-        >
-        <a href="">
-          <li class="">
-            <p class="text-gray-800 text-lg font-normal">Episode 3: Gotcha!</p>
-          </li></a
-        >
-
-        <!-- Add more reviews here -->
+        {% for other_episode in other_episodes %}
+        <li>
+          <a
+            href="{% url 'detail_tayangan_episode' other_episode.1 %}?sub_judul={{ other_episode.0 }}"
+            class="text-gray-800 text-lg font-normal"
+            >{{ other_episode.0 }}</a
+          >
+        </li>
+        {% endfor %}
       </ul>
     </div>
+
+    <!-- Slider -->
+    <div
+      class="flex flex-col items-center py-5 gap-3"
+      id="slider-container"
+      style="display: none"
+    >
+      <input
+        id="progress-slider"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        class="w-fit mx-auto"
+      />
+    </div>
+
     <!-- Buttons -->
-    <div class="containe flex flex-row mt-3 justify-end">
+    <div class="flex flex-row mt-3 justify-center">
+      {% if episode.6 == 'released' %}
       <button
+        id="tonton-button"
         class="bg-[#DF8931] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#F4BA7E] active:bg-[#DF8931]"
       >
         Tonton Sekarang
       </button>
+      {% else %}
+      <button
+        class="bg-gray-400 text-white px-4 py-2 mx-2 rounded-3xl cursor-not-allowed"
+        disabled
+      >
+        Episode Belum Dirilis
+      </button>
+      {% endif %}
     </div>
-    <!-- Description & Poster -->
+
+    <!-- Script for Slider and Button -->
+    <script>
+      const tontonButton = document.getElementById("tonton-button");
+      const sliderContainer = document.getElementById("slider-container");
+      const progressSlider = document.getElementById("progress-slider");
+
+      tontonButton.addEventListener("click", function () {
+        sliderContainer.style.display = "flex";
+      });
+
+      progressSlider.addEventListener("input", function () {
+        const percentage = progressSlider.value;
+        if (percentage >= 70) {
+          // Send an AJAX request to the server to record the watch progress
+          fetch("/tayangan/series/{{ series_id }}/watch/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                alert("Film watched successfully!");
+              }
+            });
+        }
+      });
+    </script>
+
+    <!-- Description -->
     <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
       <div class="">
         <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
           Deskripsi Tayangan:
         </h1>
         <p class="text-black text-lg ml-3 py-5 font-normal">
-          Sinopsis Episode: Lorem ipsum <br />
-          Durasi Episode: 1 jam <br />
-          Url Episode: https://... <br />
-          Tanggal Rilis Episode: 12/12/2021
+          Sinopsis Episode: {{ episode.2 }} <br />
+          Durasi Episode: {{ episode.3 }} Menit <br />
+          Url Episode: <a href="{{ episode.4 }}">{{ episode.4 }}</a> <br />
+          Tanggal Rilis Episode: {{ episode.5 }}
         </p>
-      </div>
-      <div class="h-96 w-48 bg-gray-700 ml-auto self-center mr-10 flex">
-        <p class="self-center mx-auto">Poster</p>
       </div>
     </div>
   </div>

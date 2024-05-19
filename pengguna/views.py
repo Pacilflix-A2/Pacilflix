@@ -5,6 +5,7 @@ from django.urls import reverse
 from general.query import *
 from general.auth import *
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import format_html
 
 @csrf_exempt
 def register(request):
@@ -18,7 +19,7 @@ def register(request):
         asal_negara = request.POST.get("negara")
         
         try:
-            add_query(f"INSERT INTO pengguna (username, password, asal_negara) VALUES ('{username}', '{password}', '{asal_negara}');")
+            add_query("INSERT INTO pengguna (username, password, asal_negara) VALUES (%s, %s, %s);", (username, password, asal_negara))
             messages.success(request, 'Your account has been successfully created!')
             response = HttpResponseRedirect(reverse("pengguna:login"))
             return response
@@ -37,7 +38,7 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        result = query_select(f"SELECT username, asal_negara FROM pengguna WHERE username='{username}' AND password='{password}';")
+        result = query_select('SELECT username, asal_negara FROM pengguna WHERE username = %s AND password = %s', (username, password))
         
         if len(result) != 0:
             username = result[0][0]
@@ -47,7 +48,7 @@ def login_user(request):
             response.set_cookie('username', username)
             response.set_cookie('negara', negara)
             response.set_cookie('is_authenticated', "True")
-            
+            messages.success(request, format_html("Login Success. Welcome, <strong>{}</strong>!", username))
             return response
         else:
             messages.error(request, "Sorry, incorrect username or password. Please try again.")

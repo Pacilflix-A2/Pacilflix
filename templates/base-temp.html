@@ -17,18 +17,87 @@
       type="text/css"
       href="{% static 'tayangan/fonts/lexend/lexend.css' %}"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    {% block extra_css %} {% endblock %}
-  </head>
-  <body>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    {% block navbar %} {% include 'navbar.html' %} {% endblock %}
-    <div style="margin-top: 80px">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'Poppins/poppins.css' %}"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block extra_css %} 
+    <style>
+      .toast-success {
+          background-color: #d4edda;
+          color: #155724;
+      }
+      .toast-error {
+          background-color: #f8d7da;
+          color: #721c24;
+      }
+      .toast-container {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1100;
+        }
+      .toast.fade {
+          opacity: 0;
+          transition: opacity 0.5s ease-in-out;
+      }
+      .toast.show {
+          opacity: 1;
+      }
+    </style>
+    {% endblock %}
+  </head>
+  <body>
+    {% block navbar %} {% include 'navbar-temp.html' %} {% endblock %}
+    <div style="margin-top: 80px" class="bg-[#fdf5ef]">
       <!-- Increased margin-top -->
       {% block content %} {% endblock %}
     </div>
-    {% block extra_js %} {% endblock %}
+    <div class="toast-container" aria-live="polite" aria-atomic="true">
+      {% if messages %}
+        <div id="toast-wrapper">
+            {% for message in messages %}
+            <div 
+                class="toast align-items-center fade show {% if 'success' in message.tags %}toast-success{% elif 'error' in message.tags %}toast-error{% endif %}" 
+                role="alert" 
+                aria-live="assertive" 
+                aria-atomic="true" 
+                data-bs-delay="5000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {% if 'success' in message.tags %}
+                          <i class="fas fa-check-circle me-2 checklist-icon" style="color: green;"></i>
+                        {% elif 'error' in message.tags %}
+                          <i class="fas fa-times-circle me-2 error-icon" style="color: red;"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    {% block extra_js %}
+    <script>
+      $(document).ready(function() {
+          // Initialize and show the toast messages with a 2-second delay
+          $('.toast').each(function() {
+              var toast = new bootstrap.Toast(this, { delay: 2000 });
+              toast.show();
+          });
+      });
+    </script>
+    {% endblock %}
   </body>
 </html>
