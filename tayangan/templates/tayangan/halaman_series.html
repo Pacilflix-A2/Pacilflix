@@ -35,6 +35,9 @@
       <button
         id="unduh-tayangan-button"
         class="bg-[#FFD874] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#FFEDBF] active:bg-[#FFD874]"
+        id="unduh-tayangan"
+        data-tayangan-id="{{ series_id }}"
+        data-tayangan-judul="{{ series.0 }}"
       >
         Unduh Tayangan
         <button
@@ -45,6 +48,65 @@
       </button>
       <input type="hidden" id="judul_film" value="{{series.0}}" name="judul_film">
     </div>
+
+    <!-- Modal for Success -->
+    <div id="modal-unduh-success" class="" style="display: none">
+      <div
+        class="flex flex-col justify-center items-center bg-white py-2 px-2 my-3 gap-1"
+      >
+        <h2>SUKSES MENAMBAHKAN TAYANGAN KE DAFTAR UNDUHAN</h2>
+        <p class="text-center">
+          Selamat! Anda telah berhasil mengunduh
+          <span id="tayangan-judul" class="font-bold"></span> dan akan berlaku
+          hingga <span id="berlaku-hingga" class="font-bold"></span>. Cek
+          informasi selengkapnya pada halaman daftar unduhan.
+        </p>
+        <a
+          href="{% url 'daftar:daftar_unduhan' %}"
+          class="button bg-gray-400 rounded px-2 hover:text-white"
+          >Tombol Menuju Daftar Unduhan</a
+        >
+      </div>
+    </div>
+
+    <!-- Script For Unduhan -->
+    <script>
+      document
+        .getElementById("unduh-tayangan")
+        .addEventListener("click", function () {
+          var tayanganId = this.getAttribute("data-tayangan-id");
+          var tayanganJudul = this.getAttribute("data-tayangan-judul");
+
+          fetch("/tayangan/unduh-tayangan/" + tayanganId + "/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                var modal = document.getElementById("modal-unduh-success");
+                var tayanganJudulElement =
+                  document.getElementById("tayangan-judul");
+                var berlakuHinggaElement =
+                  document.getElementById("berlaku-hingga");
+
+                tayanganJudulElement.textContent = tayanganJudul;
+                berlakuHinggaElement.textContent = data.berlaku_hingga;
+
+                modal.style.display = "block";
+              } else {
+                alert("Error: " + data.message);
+              }
+            })
+            .catch((error) => {
+              alert("An error occurred while unduh tayangan.");
+              console.error("Error:", error);
+            });
+        });
+    </script>
+
     <!-- Description -->
     <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
       <div class="">
@@ -62,6 +124,7 @@
         </p>
       </div>
     </div>
+
     <!-- Ulasan -->
     <div class="bg-[#D9D9D9] pt-3">
       <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
