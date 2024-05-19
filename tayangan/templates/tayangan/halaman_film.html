@@ -1,8 +1,9 @@
-{% extends 'base-temp.html' %} 
-{% block content %}
+{% extends 'base-temp.html' %} {% block content %}
 
 <div class="w-screen" style="margin: -24px 0 0">
-  <h1 class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center">
+  <h1
+    class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
+  >
     Halaman Film
   </h1>
   <div class="container">
@@ -47,7 +48,6 @@
       <button
         id="unduh-tayangan-button"
         class="bg-[#FFD874] text-white px-4 py-2 mx-2 rounded-3xl hover:bg-[#FFEDBF] active:bg-[#FFD874]"
-        id="unduh-tayangan"
         data-tayangan-id="{{ film_id }}"
         data-tayangan-judul="{{ film.0 }}"
       >
@@ -59,7 +59,12 @@
       >
         Tambah ke Favorit
       </button>
-      <input type="hidden" id="judul_film" value="{{film.0}}" name="judul_film">
+      <input
+        type="hidden"
+        id="judul_film"
+        value="{{film.0}}"
+        name="judul_film"
+      />
     </div>
 
     <!-- Modal for Success -->
@@ -108,47 +113,13 @@
         }
       });
 
-      document.getElementById("add-to-favorite-button").addEventListener("click", function () {
-        const favoriteModal = new bootstrap.Modal(document.getElementById('addToFavoriteModal'));
-        favoriteModal.show();
-      });
-    </script>
-
-    <!-- Script For Unduhan -->
-    <script>
       document
-        .getElementById("unduh-tayangan")
+        .getElementById("add-to-favorite-button")
         .addEventListener("click", function () {
-          var tayanganId = this.getAttribute("data-tayangan-id");
-          var tayanganJudul = this.getAttribute("data-tayangan-judul");
-
-          fetch("/tayangan/unduh-tayangan/" + tayanganId + "/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.status === "success") {
-                var modal = document.getElementById("modal-unduh-success");
-                var tayanganJudulElement =
-                  document.getElementById("tayangan-judul");
-                var berlakuHinggaElement =
-                  document.getElementById("berlaku-hingga");
-
-                tayanganJudulElement.textContent = tayanganJudul;
-                berlakuHinggaElement.textContent = data.berlaku_hingga;
-
-                modal.style.display = "block";
-              } else {
-                alert("Error: " + data.message);
-              }
-            })
-            .catch((error) => {
-              alert("An error occurred while unduh tayangan.");
-              console.error("Error:", error);
-            });
+          const favoriteModal = new bootstrap.Modal(
+            document.getElementById("addToFavoriteModal")
+          );
+          favoriteModal.show();
         });
     </script>
 
@@ -178,14 +149,18 @@
         Ulasan
       </h1>
       <div class="w-1/2 mx-auto flex flex-col items-center" id="review-input">
-        <label class="block text-black ml-2 self-start" for="username">Berikan Ulasan</label>
+        <label class="block text-black ml-2 self-start" for="username"
+          >Berikan Ulasan</label
+        >
         <input
           class="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="ulasan-film"
           type="text"
           placeholder="Tulis ulasan..."
         />
-        <label class="block text-black ml-2 self-start mt-3" for="rating">Rating (1-5)</label>
+        <label class="block text-black ml-2 self-start mt-3" for="rating"
+          >Rating (1-5)</label
+        >
         <input
           class="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="rating-film"
@@ -225,114 +200,199 @@
       </div>
     </div>
 
-    <div id="popup-message" class="hidden fixed bottom-0 right-0 mb-4 mr-4 px-4 py-2 bg-green-500 text-white rounded-md">
+    <!-- Script for Submitting Review -->
+    <script>
+      document
+        .getElementById("submit-review")
+        .addEventListener("click", function () {
+          var filmId = this.getAttribute("data-film-id");
+          var deskripsi = document.getElementById("ulasan-film").value;
+          var rating = document.getElementById("rating-film").value;
+
+          fetch("/tayangan/submit-review/" + filmId + "/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body:
+              "deskripsi=" +
+              encodeURIComponent(deskripsi) +
+              "&rating=" +
+              encodeURIComponent(rating),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("Review submitted successfully!");
+                location.reload();
+              } else {
+                alert("Error: " + data.message);
+              }
+            })
+            .catch((error) => {
+              alert("An error occurred while submitting the review.");
+              console.error("Error:", error);
+            });
+        });
+    </script>
+
+    <div
+      id="popup-message"
+      class="hidden fixed bottom-0 right-0 mb-4 mr-4 px-4 py-2 bg-green-500 text-white rounded-md"
+    >
       <!-- Pop-up message will be displayed here -->
-  </div>
-  
+    </div>
+
     <!-- Modal for adding to favorite list -->
-    <div class="modal fade" id="addToFavoriteModal" tabindex="-1" aria-labelledby="addToFavoriteModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="addToFavoriteModal"
+      tabindex="-1"
+      aria-labelledby="addToFavoriteModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header" style="background-color: #E76838; color: #FFF;">
-            <h5 class="modal-title" id="addToFavoriteModalLabel">Tambah ke Daftar Favorit</h5>
-            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+          <div
+            class="modal-header"
+            style="background-color: #e76838; color: #fff"
+          >
+            <h5 class="modal-title" id="addToFavoriteModalLabel">
+              Tambah ke Daftar Favorit
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="modal-body" style="background-color: #FDF5EF; color: #73261B;">
-            <form id="addToFavoriteForm" action="{% url 'daftar:tambah_favorit' %}" method="post">
+          <div
+            class="modal-body"
+            style="background-color: #fdf5ef; color: #73261b"
+          >
+            <form
+              id="addToFavoriteForm"
+              action="{% url 'daftar:tambah_favorit' %}"
+              method="post"
+            >
               {% csrf_token %}
               <div class="mb-3">
-                <input type="hidden" id="judul_film" value="{{film.0}}" name="judul_film">
-                <label for="favoriteTitle" class="form-label">Pilih Daftar Favorit:</label>
+                <input
+                  type="hidden"
+                  id="judul_film"
+                  value="{{film.0}}"
+                  name="judul_film"
+                />
+                <label for="favoriteTitle" class="form-label"
+                  >Pilih Daftar Favorit:</label
+                >
                 <div class="custom-dropdown">
-                  <select class="form-select" id="favoriteTitle" name="favoriteTitle">
+                  <select
+                    class="form-select"
+                    id="favoriteTitle"
+                    name="favoriteTitle"
+                  >
                     {% for item in daftar_favorit %}
                     <option value="{{ item.judul }}">{{ item.judul }}</option>
                     {% endfor %}
                   </select>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary" style="background-color: #EA7F4D; border-color: #EA7F4D;">Tambah</button>
-            </form>            
+              <button
+                type="submit"
+                class="btn btn-primary"
+                style="background-color: #ea7f4d; border-color: #ea7f4d"
+              >
+                Tambah
+              </button>
+            </form>
           </div>
         </div>
       </div>
-      <input type="hidden" id="csrf-token" style="color: #FDF5EF;" value="{% csrf_token %}">
+      <input
+        type="hidden"
+        id="csrf-token"
+        style="color: #fdf5ef"
+        value="{% csrf_token %}"
+      />
     </div>
   </div>
 </div>
 
-
-
 <script>
-  document.getElementById("addToFavoriteForm").addEventListener("submit", function(event) {
+  document
+    .getElementById("addToFavoriteForm")
+    .addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent default form submission
 
       // Fetch form data
       const formData = new FormData(this);
 
       fetch(this.action, {
-          method: "POST",
-          body: formData
+        method: "POST",
+        body: formData,
       })
-      .then(response => response.json())
-      .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           // Check if addition to favorites was successful
           if (data.success) {
-              // Show success message
-              showPopupMessage("Added to favorites successfully", "bg-green-500");
+            // Show success message
+            showPopupMessage("Added to favorites successfully", "bg-green-500");
           } else {
-              // Show error message
-              showPopupMessage("Failed to add to favorites", "bg-red-500");
+            // Show error message
+            showPopupMessage("Failed to add to favorites", "bg-red-500");
           }
-      })
-      .catch(error => {
-          console.error('Error:', error);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
           // Show error message
           showPopupMessage("Failed to add to favorites", "bg-red-500");
-      });
-  });
+        });
+    });
 
   function showPopupMessage(message, bgColor) {
-      const popupMessage = document.getElementById("popup-message");
-      popupMessage.textContent = message;
-      popupMessage.className = `fixed bottom-0 right-0 mb-4 mr-4 px-4 py-2 text-white rounded-md ${bgColor} block`;
+    const popupMessage = document.getElementById("popup-message");
+    popupMessage.textContent = message;
+    popupMessage.className = `fixed bottom-0 right-0 mb-4 mr-4 px-4 py-2 text-white rounded-md ${bgColor} block`;
 
-      // Hide message after 3 seconds
-      setTimeout(function() {
-          popupMessage.className = "hidden";
-      }, 3000);
+    // Hide message after 3 seconds
+    setTimeout(function () {
+      popupMessage.className = "hidden";
+    }, 3000);
   }
 
-  document.getElementById("unduh-tayangan-button").addEventListener("click", function() {
-    // Get the value of the judul_film input
-    const judulFilm = document.getElementById("judul_film").value;
-  
-    // Send a request to the URL associated with the daftar:unduh_tayangan view
-    fetch("{% url 'daftar:unduh_tayangan' %}", {
-      method: "POST", // Or "GET" depending on your view
-      headers: {
-        "Content-Type": "application/json",
-        // You may need to include CSRF token in headers if required
-        // "X-CSRFToken": "{{ csrf_token }}"
-      },
-      // Include the judul_film value in the request body
-      body: JSON.stringify({ judul_film: judulFilm }),
-    })
-    .then(response => {
-      // Handle response, e.g., show a message if successful
-      if (response.ok) {
-        alert("Tayangan successfully downloaded!");
-      } else {
-        alert("Failed to download tayangan.");
-      }
-    })
-    .catch(error => {
-      // Handle error
-      console.error('Error:', error);
-      alert("Failed to download tayangan. Please try again later.");
+  document
+    .getElementById("unduh-tayangan-button")
+    .addEventListener("click", function () {
+      // Get the value of the judul_film input
+      const judulFilm = document.getElementById("judul_film").value;
+
+      // Send a request to the URL associated with the daftar:unduh_tayangan view
+      fetch("{% url 'daftar:unduh_tayangan' %}", {
+        method: "POST", // Or "GET" depending on your view
+        headers: {
+          "Content-Type": "application/json",
+          // You may need to include CSRF token in headers if required
+          // "X-CSRFToken": "{{ csrf_token }}"
+        },
+        // Include the judul_film value in the request body
+        body: JSON.stringify({ judul_film: judulFilm }),
+      })
+        .then((response) => {
+          // Handle response, e.g., show a message if successful
+          if (response.ok) {
+            alert("Tayangan successfully downloaded!");
+          } else {
+            alert("Failed to download tayangan.");
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+          alert("Failed to download tayangan. Please try again later.");
+        });
     });
-  });
 </script>
-  
 
 {% endblock content %}
