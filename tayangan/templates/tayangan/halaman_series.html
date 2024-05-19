@@ -3,39 +3,31 @@
   <h1
     class="w-screen bg-[#E76838] py-2 font-bold text-white text-lg text-center"
   >
-    Halaman Film
+    Halaman Series
   </h1>
   <div class="container">
     <!-- Title & Genre -->
     <div class="mt-5 ml-5">
-      <h1 class="text-5xl underline">Solo Leveling</h1>
-      <h2 class="text-xl">Action, Anime, Drama</h2>
+      <h1 class="text-5xl">
+        Judul Series: <span class="font-bold">{{ series.0 }}</span>
+      </h1>
+      <h2 class="text-xl">
+        Genre: <span class="font-semibold">{{ series.5 }}</span>
+      </h2>
     </div>
     <!-- Episodes -->
     <div class="ml-5 mt-2">
       <h1 class="text-xl font-bold underline">Episodes:</h1>
       <ul class="list-disc ml-8">
-        <a href="">
-          <li class="">
-            <p class="text-gray-800 text-lg font-normal">
-              Episode 1: Introduction
-            </p>
-          </li></a
-        >
-        <a href="">
-          <li class="">
-            <p class="text-gray-800 text-lg font-normal">
-              Episode 2: The End of the Beginning
-            </p>
-          </li></a
-        >
-        <a href="">
-          <li class="">
-            <p class="text-gray-800 text-lg font-normal">Episode 3: Gotcha!</p>
-          </li></a
-        >
-
-        <!-- Add more reviews here -->
+        {% for episode in episodes %}
+        <li>
+          <a
+            href="{% url 'detail_tayangan_episode' episode.1 %}?sub_judul={{ episode.0 }}"
+            class="text-gray-800 text-lg font-normal"
+            >{{ episode.0 }}</a
+          >
+        </li>
+        {% endfor %}
       </ul>
     </div>
     <!-- Buttons -->
@@ -50,24 +42,21 @@
         Tambah ke Favorit
       </button>
     </div>
-    <!-- Description & Poster -->
+    <!-- Description -->
     <div class="flex flex-row bg-[#D9D9D9] mt-3 pt-3">
       <div class="">
         <h1 class="text-4xl rounded-r-3xl bg-[#EDEDED] w-fit pl-1 pr-5 py-1">
           Deskripsi Tayangan:
         </h1>
         <p class="text-black text-lg ml-3 py-5 font-normal">
-          Total View: 12345 <br />
-          Rating Rata-Rata: 9/10 <br />
-          Sinopsis: Lorem ipsum <br />
-          Asal Negara: Uzbekistan <br />
-          Pemain: Andi, Budi <br />
-          Penulis Skenario: Jamal, Agung<br />
-          Sutradara: Mikail
+          Total View: {{ series.3 }} <br />
+          Rating Rata-Rata: {{ series.4 }} <br />
+          Sinopsis: {{ series.1 }} <br />
+          Asal Negara: {{ series.2 }} <br />
+          Pemain: {{ series.6 }} <br />
+          Penulis Skenario: {{ series.7 }}<br />
+          Sutradara: {{ series.8 }}
         </p>
-      </div>
-      <div class="h-96 w-48 bg-gray-700 ml-auto self-center mr-10 flex">
-        <p class="self-center mx-auto">Poster</p>
       </div>
     </div>
     <!-- Ulasan -->
