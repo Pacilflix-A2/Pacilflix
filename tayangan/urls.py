@@ -8,4 +8,5 @@ urlpatterns = [
     path('film/<str:film_id>/watch/', views.record_film_watch, name='record_film_watch'),
     path('series/<str:series_id>/watch/', views.record_series_watch, name='record_series_watch'),
     path('submit-review/<str:tayangan_id>/', views.submit_review, name='submit_review'),
+    path('unduh-tayangan/<str:tayangan_id>/', views.unduh_tayangan, name='unduh_tayangan'),
 ]

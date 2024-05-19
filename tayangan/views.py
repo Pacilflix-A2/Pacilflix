@@ -298,3 +298,72 @@ def submit_review(request, tayangan_id):
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@csrf_exempt
+def unduh_tayangan(request, tayangan_id):
+    if request.method == 'POST':
+        username = get_current_user(request)['username']
+
+        # Check if the tayangan is already in the user's unduhan list
+        unduhan_exists = query_select("""
+            SELECT EXISTS (
+                SELECT 1
+                FROM TAYANGAN_TERUNDUH
+                WHERE id_tayangan = %s AND username = %s
+            )
+        """, (tayangan_id, username))[0][0]
+
+        if not unduhan_exists:
+            # Add the tayangan to the user's unduhan list
+            query = """
+                INSERT INTO TAYANGAN_TERUNDUH (id_tayangan, username, timestamp)
+                VALUES (%s, %s, NOW())
+            """
+            params = (tayangan_id, username)
+            add_query(query, params)
+
+            current_time = timezone.now()
+            berlaku_hingga = current_time + timedelta(days=7)
+            berlaku_hingga_str = berlaku_hingga.strftime("%Y-%m-%d %H:%M:%S")
+
+            return JsonResponse({'status': 'success', 'berlaku_hingga': berlaku_hingga_str})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Tayangan already in unduhan list'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@csrf_exempt
+def favorit_tayangan(request, tayangan_id):
+    if request.method == 'POST':
+        username = get_current_user(request)['username']
+        judul_daftar_favorit = request.POST.get('judul_daftar_favorit')
+
+        # Check if the daftar favorit exists for the user
+        daftar_favorit_exists = query_select("""
+            SELECT EXISTS (
+                SELECT 1
+                FROM DAFTAR_FAVORIT
+                WHERE username = %s AND judul = %s
+            )
+        """, (username, judul_daftar_favorit))[0][0]
+
+        if not daftar_favorit_exists:
+            # Create a new daftar favorit for the user
+            query = """
+                INSERT INTO DAFTAR_FAVORIT (timestamp, username, judul)
+                VALUES (NOW(), %s, %s)
+            """
+            params = (username, judul_daftar_favorit)
+            add_query(query, params)
+
+        # Add the tayangan to the user's daftar favorit
+        query = """
+            INSERT INTO TAYANGAN_MEMILIKI_DAFTAR_FAVORIT (id_tayangan, timestamp, username)
+            VALUES (%s, NOW(), %s)
+        """
+        params = (tayangan_id, username)
+        add_query(query, params)
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
