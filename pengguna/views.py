@@ -5,6 +5,7 @@ from django.urls import reverse
 from general.query import *
 from general.auth import *
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import format_html
 
 @csrf_exempt
 def register(request):
@@ -47,7 +48,7 @@ def login_user(request):
             response.set_cookie('username', username)
             response.set_cookie('negara', negara)
             response.set_cookie('is_authenticated', "True")
-            
+            messages.success(request, format_html("Login Success. Welcome, <strong>{}</strong>!", username))
             return response
         else:
             messages.error(request, "Sorry, incorrect username or password. Please try again.")
