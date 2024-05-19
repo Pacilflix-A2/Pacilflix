@@ -28,7 +28,7 @@ def trailer(request):
         GROUP BY tayangan.id
         ORDER BY total_views DESC
         LIMIT 10
-    """, (last_7_days_datetime))
+    """, (last_7_days_datetime,))
 
     context = {
         'films': films,
